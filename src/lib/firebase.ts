@@ -16,7 +16,7 @@ const firebaseConfig = {
   "authDomain": "mindfiti.firebaseapp.com",
   "measurementId": "",
   "messagingSenderId": "964015669970",
-  "databaseURL": "https://mindfiti-default-rtdb.europe-west1.firebasedatabase.app/",
+  "databaseURL": "https://mindfiti-default-rtdb.europe-west1.firebasedatabase.app",
 };
 
 // Initialize Firebase
