@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
@@ -27,11 +29,23 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [role, setRole] = useState("client");
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Store user info in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        firstName,
+        lastName,
+        email,
+        role,
+      });
+
       toast({
         title: "Account Created",
         description: "You have successfully created an account. Please log in.",
@@ -97,10 +111,6 @@ export default function SignupPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="phone">Phone Number (Optional)</Label>
-                <Input id="phone" type="tel" placeholder="+254 712 345 678" />
-              </div>
-              <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
@@ -109,6 +119,38 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+              </div>
+              <div className="grid gap-2">
+                <Label>Sign up as</Label>
+                <RadioGroup
+                  defaultValue="client"
+                  className="grid grid-cols-2 gap-4"
+                  value={role}
+                  onValueChange={setRole}
+                >
+                  <div>
+                    <RadioGroupItem value="client" id="client" className="peer sr-only" />
+                    <Label
+                      htmlFor="client"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      Client
+                    </Label>
+                  </div>
+                  <div>
+                    <RadioGroupItem
+                      value="provider"
+                      id="provider"
+                      className="peer sr-only"
+                    />
+                    <Label
+                      htmlFor="provider"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      Provider
+                    </Label>
+                  </div>
+                </RadioGroup>
               </div>
               <div className="flex items-center space-x-2 mt-2">
                 <Checkbox id="terms" required />
