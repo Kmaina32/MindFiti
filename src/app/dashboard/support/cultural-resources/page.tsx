@@ -8,6 +8,48 @@ import Link from "next/link";
 import { useState } from "react";
 
 const resources: any[] = [
+    {
+        title: "Community and Mental Wellness in African Traditions",
+        type: "Article",
+        category: "Community Support",
+        image: "https://picsum.photos/400/250",
+        dataAiHint: "african community gathering"
+    },
+    {
+        title: "Destigmatizing Mental Health in the Diaspora",
+        type: "Podcast",
+        category: "Mental Health Advocacy",
+        image: "https://picsum.photos/400/251",
+        dataAiHint: "podcast microphone"
+    },
+    {
+        title: "Traditional Healing Practices and Modern Therapy",
+        type: "Article",
+        category: "Holistic Wellness",
+        image: "https://picsum.photos/400/252",
+        dataAiHint: "traditional african medicine"
+    },
+    {
+        title: "The Role of Faith and Spirituality in Mental Health",
+        type: "Article",
+        category: "Faith & Wellness",
+        image: "https://picsum.photos/400/253",
+        dataAiHint: "spiritual symbols"
+    },
+    {
+        title: "Intergenerational Trauma and Its Impact",
+        type: "Podcast",
+        category: "Healing",
+        image: "https://picsum.photos/400/254",
+        dataAiHint: "family tree"
+    },
+    {
+        title: "Cultivating Resilience: Stories from Across the Continent",
+        type: "Article",
+        category: "Personal Growth",
+        image: "https://picsum.photos/400/255",
+        dataAiHint: "resilient african landscape"
+    }
 ]
 
 export default function CulturalResourcesPage() {
