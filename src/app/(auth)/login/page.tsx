@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -89,6 +90,10 @@ export default function LoginPage() {
       } else {
         // This can happen if the user signs in with Google but hasn't completed the signup form with a role
         // Redirect them to signup to complete their profile
+        toast({
+          title: "Complete Your Profile",
+          description: "It looks like you're new here. Please select an account type to continue.",
+        });
         router.push("/signup");
       }
 

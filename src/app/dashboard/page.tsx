@@ -1,8 +1,9 @@
+
 "use client"
 
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
-import { auth, db } from "@/lib/firebase"
+import { db } from "@/lib/firebase"
 import { Button } from "@/components/ui/button"
 import {
   Card,
