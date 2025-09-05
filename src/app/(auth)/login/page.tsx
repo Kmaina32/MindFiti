@@ -43,6 +43,8 @@ export default function LoginPage() {
         const userData = docSnap.data();
         if (userData.role === 'provider') {
           router.push("/provider/dashboard");
+        } else if (userData.role === 'admin') {
+          router.push('/admin/dashboard');
         } else {
           router.push("/dashboard");
         }
@@ -73,6 +75,8 @@ export default function LoginPage() {
         const userData = docSnap.data();
         if (userData.role === 'provider') {
           router.push("/provider/dashboard");
+        } else if (userData.role === 'admin') {
+          router.push('/admin/dashboard');
         } else {
           router.push("/dashboard");
         }
