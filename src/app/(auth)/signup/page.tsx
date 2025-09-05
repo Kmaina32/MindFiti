@@ -3,9 +3,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -38,10 +37,8 @@ export default function SignupPage() {
     }
     
     try {
-      // Check if email is already in use
-      const emailRef = doc(db, "users-by-email", email);
-      const emailDoc = await getDoc(emailRef);
-      if (emailDoc.exists()) {
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      if (methods.length > 0) {
         toast({
           variant: "destructive",
           title: "Email already in use",
@@ -51,22 +48,9 @@ export default function SignupPage() {
         return;
       }
 
-      // Create user but don't create profile yet
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // We will create the user document in the profile completion step.
-      // For now, we can temporarily store the names if needed or pass them.
-      // A simple way is to use the auth context which will pick up the new user.
+      await createUserWithEmailAndPassword(auth, email, password);
+      // The AuthProvider will detect the new user and redirect to /signup/profile
       
-      toast({
-        title: "Account Created",
-        description: "Please complete your profile.",
-      });
-
-      // Redirect to complete profile
-      router.push("/signup/profile");
-
     } catch (error: any) {
        toast({
         variant: "destructive",
@@ -80,7 +64,7 @@ export default function SignupPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // AuthProvider will handle redirecting to /signup/profile if it's a new user
+      // The AuthProvider will handle redirecting to /signup/profile if it's a new user
     } catch (error: any) {
       toast({
         variant: "destructive",

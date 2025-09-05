@@ -3,9 +3,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { User } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
-import { doc, setDoc, writeBatch } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,7 +23,7 @@ import { useAuth } from "@/context/auth-context";
 
 export default function CompleteProfilePage() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, loading, userProfile } = useAuth();
   const { toast } = useToast();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -32,28 +31,30 @@ export default function CompleteProfilePage() {
 
   useEffect(() => {
     if (!loading && !user) {
-      // If no user is logged in, redirect to signup
       router.replace('/signup');
     }
+     if (!loading && user && userProfile) {
+      // User has a profile, so redirect them away from here
+      handleRedirect(userProfile.role);
+    }
     if (user) {
-        // Pre-fill names from Google account if available
         const nameParts = user.displayName?.split(' ') || [];
         setFirstName(nameParts[0] || '');
         setLastName(nameParts.slice(1).join(' ') || '');
     }
-  }, [user, loading, router]);
+  }, [user, loading, userProfile, router]);
 
 
   const handleRedirect = (role: string) => {
     switch (role) {
       case 'admin':
-        router.push('/admin/dashboard');
+        router.replace('/admin/dashboard');
         break;
       case 'provider':
-        router.push('/provider/dashboard');
+        router.replace('/provider/dashboard');
         break;
       default:
-        router.push('/dashboard');
+        router.replace('/dashboard');
         break;
     }
   };
@@ -64,24 +65,24 @@ export default function CompleteProfilePage() {
       toast({ variant: "destructive", title: "Error", description: "You must be logged in to complete your profile." });
       return;
     }
+     if (!firstName || !lastName) {
+      toast({ variant: "destructive", title: "Missing Information", description: "Please enter your first and last name." });
+      return;
+    }
 
     try {
       const userRef = doc(db, "users", user.uid);
-      const emailRef = doc(db, "users-by-email", user.email!);
-      const batch = writeBatch(db);
-
+      
+      // Assign admin role if the email matches
       const userRole = user.email === 'gmaina4242@gmail.com' ? 'admin' : role;
       
-      batch.set(userRef, {
+      await setDoc(userRef, {
         uid: user.uid,
         firstName: firstName,
         lastName: lastName,
         email: user.email,
         role: userRole,
       });
-
-      batch.set(emailRef, { uid: user.uid });
-      await batch.commit();
 
       toast({
         title: "Profile Complete",
@@ -99,8 +100,9 @@ export default function CompleteProfilePage() {
     }
   };
   
-  if (loading || !user) {
-    return null; // Or a branded loader
+  if (loading || !user || userProfile) {
+    // Show branded loader or nothing while we wait for auth state or redirect
+    return null; 
   }
 
   return (
@@ -186,4 +188,3 @@ export default function CompleteProfilePage() {
       </div>
   );
 }
-
