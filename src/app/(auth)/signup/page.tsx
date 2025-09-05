@@ -70,11 +70,25 @@ export default function SignupPage() {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Check if user with this email already exists
+      const userDoc = await getDoc(doc(db, "users-by-email", email));
+      if (userDoc.exists()) {
+        toast({
+          variant: "destructive",
+          title: "Signup Failed",
+          description: "This email is already in use. Please log in.",
+        });
+        router.push('/login');
+        return;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       const userRole = email === 'gmaina4242@gmail.com' ? 'admin' : role;
 
       await createFirestoreUser(user, userRole, firstName, lastName);
+      // Also create a lookup document to prevent duplicate emails
+      await setDoc(doc(db, "users-by-email", user.email!), { uid: user.uid });
       
       toast({
         title: "Account Created",
@@ -84,20 +98,11 @@ export default function SignupPage() {
       handleRedirect(userRole);
 
     } catch (error: any) {
-      if (error.code === 'auth/email-already-in-use') {
-        toast({
-          variant: "destructive",
-          title: "Signup Failed",
-          description: "This email is already in use. Please log in.",
-        });
-        router.push('/login');
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Signup Failed",
-          description: error.message,
-        });
-      }
+       toast({
+        variant: "destructive",
+        title: "Signup Failed",
+        description: "An unexpected error occurred. Please try again.",
+      });
     }
   };
 
@@ -122,7 +127,7 @@ export default function SignupPage() {
       toast({
         variant: "destructive",
         title: "Google Sign-Up Failed",
-        description: error.message,
+        description: "An unexpected error occurred. Please try again.",
       });
     }
   };
@@ -134,6 +139,8 @@ export default function SignupPage() {
 
     try {
       await createFirestoreUser(pendingUser, userRole);
+      await setDoc(doc(db, "users-by-email", pendingUser.email!), { uid: pendingUser.uid });
+
       
       toast({
         title: "Account Created",
@@ -147,7 +154,7 @@ export default function SignupPage() {
       toast({
         variant: "destructive",
         title: "An error occurred",
-        description: error.message,
+        description: "An unexpected error occurred. Please try again.",
       });
     }
   };

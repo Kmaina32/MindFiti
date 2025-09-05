@@ -66,7 +66,7 @@ export default function ProviderSettingsPage() {
       toast({
         variant: "destructive",
         title: "Update Failed",
-        description: error.message,
+        description: "An unexpected error occurred. Please try again.",
       });
     }
   };
@@ -86,7 +86,7 @@ export default function ProviderSettingsPage() {
       toast({
         variant: "destructive",
         title: "Deletion Failed",
-        description: error.message,
+        description: "An unexpected error occurred. Please try again.",
       });
     }
   };
