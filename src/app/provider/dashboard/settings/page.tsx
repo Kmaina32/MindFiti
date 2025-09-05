@@ -51,6 +51,14 @@ export default function ProviderSettingsPage() {
                   placeholder="amina@example.com"
                 />
               </div>
+               <div className="space-y-2">
+                <Label htmlFor="photoUrl">Dr. Mbiti's Photo URL</Label>
+                <Input
+                  id="photoUrl"
+                  type="url"
+                  placeholder="https://example.com/dr-mbiti.jpg"
+                />
+              </div>
               <Button>Update Profile</Button>
             </CardContent>
           </Card>

@@ -8,8 +8,15 @@ import {
 } from "@/components/ui/chart"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
-const chartData: any[] = [
+const chartData = [
+  { month: "January", users: 186, providers: 5 },
+  { month: "February", users: 305, providers: 8 },
+  { month: "March", users: 237, providers: 12 },
+  { month: "April", users: 473, providers: 15 },
+  { month: "May", users: 209, providers: 18 },
+  { month: "June", users: 214, providers: 20 },
 ]
+
 
 const chartConfig = {
   users: {

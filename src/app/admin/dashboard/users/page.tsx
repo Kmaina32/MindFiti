@@ -3,18 +3,53 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MoreHorizontal, File, PlusCircle, ListFilter } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useMemo, ChangeEvent } from "react";
 
 const users: any[] = [
 ];
 
+type User = {
+  name: string;
+  email: string;
+  role: 'admin' | 'provider' | 'client';
+  status: 'Active' | 'Inactive' | 'Onboarding';
+  joined: string;
+  avatar: string;
+}
+
 export default function AdminUsersPage() {
-  const [userList, setUserList] = useState(users);
+  const [userList, setUserList] = useState<User[]>(users);
+  const [filter, setFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string[]>(['Active', 'Inactive', 'Onboarding']);
+
+  const filteredUsers = useMemo(() => {
+    return userList
+        .filter(user => user.name.toLowerCase().includes(filter.toLowerCase()) || user.email.toLowerCase().includes(filter.toLowerCase()))
+        .filter(user => statusFilter.includes(user.status))
+  }, [userList, filter, statusFilter]);
+
+  const handleAddUser = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const newUser: User = {
+        name: (form.elements.namedItem('name') as HTMLInputElement).value,
+        email: (form.elements.namedItem('email') as HTMLInputElement).value,
+        role: (form.elements.namedItem('role') as HTMLInputElement).value as User['role'],
+        status: (form.elements.namedItem('status') as HTMLInputElement).value as User['status'],
+        joined: new Date().toLocaleDateString('en-CA'),
+        avatar: `https://i.pravatar.cc/150?u=${(form.elements.namedItem('email') as HTMLInputElement).value}`
+    };
+    setUserList(prev => [...prev, newUser]);
+  }
+
 
   return (
     <Card>
@@ -24,7 +59,7 @@ export default function AdminUsersPage() {
           View, manage, and edit all users on the platform.
         </CardDescription>
         <div className="flex items-center justify-between pt-4">
-            <Input placeholder="Filter users..." className="max-w-sm"/>
+            <Input placeholder="Filter users by name or email..." className="max-w-sm" value={filter} onChange={(e) => setFilter(e.target.value)}/>
             <div className="flex items-center gap-2">
                  <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -36,12 +71,17 @@ export default function AdminUsersPage() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+                    <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem checked>
+                    <DropdownMenuCheckboxItem checked={statusFilter.includes('Active')} onCheckedChange={(checked) => setStatusFilter(s => checked ? [...s, 'Active'] : s.filter(i => i !== 'Active'))}>
                       Active
                     </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>Inactive</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem checked={statusFilter.includes('Inactive')} onCheckedChange={(checked) => setStatusFilter(s => checked ? [...s, 'Inactive'] : s.filter(i => i !== 'Inactive'))}>
+                      Inactive
+                    </DropdownMenuCheckboxItem>
+                     <DropdownMenuCheckboxItem checked={statusFilter.includes('Onboarding')} onCheckedChange={(checked) => setStatusFilter(s => checked ? [...s, 'Onboarding'] : s.filter(i => i !== 'Onboarding'))}>
+                      Onboarding
+                    </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <Button size="sm" variant="outline" className="h-8 gap-1">
@@ -50,12 +90,65 @@ export default function AdminUsersPage() {
                     Export
                   </span>
                 </Button>
-                <Button size="sm" className="h-8 gap-1">
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Add User
-                  </span>
-                </Button>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button size="sm" className="h-8 gap-1">
+                            <PlusCircle className="h-3.5 w-3.5" />
+                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                Add User
+                            </span>
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Add New User</DialogTitle>
+                            <DialogDescription>
+                                Fill in the details to add a new user to the platform.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <form onSubmit={handleAddUser}>
+                          <div className="grid gap-4 py-4">
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                  <Label htmlFor="name" className="text-right">Name</Label>
+                                  <Input id="name" name="name" className="col-span-3" required/>
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                  <Label htmlFor="email" className="text-right">Email</Label>
+                                  <Input id="email" name="email" type="email" className="col-span-3" required/>
+                              </div>
+                               <div className="grid grid-cols-4 items-center gap-4">
+                                  <Label htmlFor="role" className="text-right">Role</Label>
+                                   <Select name="role" required>
+                                      <SelectTrigger className="col-span-3">
+                                          <SelectValue placeholder="Select a role" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                          <SelectItem value="client">Client</SelectItem>
+                                          <SelectItem value="provider">Provider</SelectItem>
+                                          <SelectItem value="admin">Admin</SelectItem>
+                                      </SelectContent>
+                                  </Select>
+                              </div>
+                               <div className="grid grid-cols-4 items-center gap-4">
+                                  <Label htmlFor="status" className="text-right">Status</Label>
+                                   <Select name="status" required>
+                                      <SelectTrigger className="col-span-3">
+                                          <SelectValue placeholder="Select a status" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                          <SelectItem value="Active">Active</SelectItem>
+                                          <SelectItem value="Inactive">Inactive</SelectItem>
+                                           <SelectItem value="Onboarding">Onboarding</SelectItem>
+                                      </SelectContent>
+                                  </Select>
+                              </div>
+                          </div>
+                          <DialogFooter>
+                              <Button type="submit">Create User</Button>
+                          </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
       </CardHeader>
@@ -73,7 +166,7 @@ export default function AdminUsersPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {userList.length > 0 ? userList.map((user) => (
+            {filteredUsers.length > 0 ? filteredUsers.map((user) => (
                 <TableRow key={user.email}>
                     <TableCell className="font-medium">
                         <div className="flex items-center gap-3">
