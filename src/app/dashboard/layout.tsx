@@ -11,6 +11,7 @@ import {
   Search,
   Users2,
   BookOpen,
+  Video,
 } from "lucide-react"
 
 import Link from "next/link"
@@ -88,6 +89,19 @@ export default function DashboardLayout({
                     >
                     <BookHeart />
                     <span>Journal</span>
+                    </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <Link href="/dashboard/telehealth" passHref>
+                    <SidebarMenuButton
+                    isActive={isActive("/dashboard/telehealth")}
+                    tooltip={{
+                        children: "Telehealth",
+                    }}
+                    >
+                    <Video />
+                    <span>Telehealth</span>
                     </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
