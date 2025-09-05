@@ -7,10 +7,8 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
-  User
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
+import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,48 +29,14 @@ export default function LoginPage() {
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleRedirect = (role: string) => {
-    switch (role) {
-      case 'admin':
-        router.push('/admin/dashboard');
-        break;
-      case 'provider':
-        router.push('/provider/dashboard');
-        break;
-      default:
-        router.push('/dashboard');
-        break;
-    }
-  };
-
-  const handleLoginSuccess = async (user: User) => {
-    try {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        handleRedirect(userData.role);
-      } else {
-         // This can happen with a new Google user that hasn't completed their profile
-        router.push("/signup/profile");
-      }
-    } catch (error) {
-       toast({
-        variant: "destructive",
-        title: "Login Error",
-        description: "Could not retrieve user data. Please try again.",
-      });
-    }
-  };
-
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      await handleLoginSuccess(userCredential.user);
+      await signInWithEmailAndPassword(auth, email, password);
+      // AuthProvider will handle the redirect
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -81,20 +45,23 @@ export default function LoginPage() {
           ? 'Invalid email or password.'
           : 'An unexpected error occurred. Please try again.',
       });
+      setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
+    setLoading(true);
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      await handleLoginSuccess(result.user);
+      await signInWithPopup(auth, provider);
+      // AuthProvider will handle the redirect
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Google Sign-In Failed",
         description: 'An unexpected error occurred. Please try again.',
       });
+      setLoading(false);
     }
   };
 
@@ -124,6 +91,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
                 />
               </div>
               <div className="grid gap-2">
@@ -142,10 +110,11 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Log In
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Logging In..." : "Log In"}
               </Button>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -158,7 +127,7 @@ export default function LoginPage() {
                 </div>
               </div>
               <div className="grid grid-cols-1">
-                <Button variant="outline" type="button" onClick={handleGoogleSignIn}>
+                <Button variant="outline" type="button" onClick={handleGoogleSignIn} disabled={loading}>
                   <svg
                     className="mr-2 h-4 w-4"
                     role="img"

@@ -3,7 +3,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail } from "firebase/auth";
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  fetchSignInMethodsForEmail 
+} from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,13 +33,11 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
-      toast({ variant: "destructive", title: "Signup Failed", description: "Email is required." });
-      return;
-    }
+    setLoading(true);
     
     try {
       const methods = await fetchSignInMethodsForEmail(auth, email);
@@ -50,6 +53,8 @@ export default function SignupPage() {
 
       await createUserWithEmailAndPassword(auth, email, password);
       // The AuthProvider will detect the new user and redirect to /signup/profile
+      // We pass the name in the URL to pre-fill the profile form
+      router.push(`/signup/profile?firstName=${firstName}&lastName=${lastName}`);
       
     } catch (error: any) {
        toast({
@@ -57,10 +62,12 @@ export default function SignupPage() {
         title: "Signup Failed",
         description: "An unexpected error occurred. Please try again.",
       });
+      setLoading(false);
     }
   };
 
   const handleGoogleSignUp = async () => {
+    setLoading(true);
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
@@ -71,6 +78,7 @@ export default function SignupPage() {
         title: "Google Sign-Up Failed",
         description: "An unexpected error occurred. Please try again.",
       });
+      setLoading(false);
     }
   };
 
@@ -100,6 +108,7 @@ export default function SignupPage() {
                       required
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
+                      disabled={loading}
                     />
                   </div>
                   <div className="grid gap-2">
@@ -110,6 +119,7 @@ export default function SignupPage() {
                       required
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
+                      disabled={loading}
                     />
                   </div>
                 </div>
@@ -122,6 +132,7 @@ export default function SignupPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    disabled={loading}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -132,10 +143,11 @@ export default function SignupPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    disabled={loading}
                   />
                 </div>
                 <div className="flex items-center space-x-2 mt-2">
-                    <Checkbox id="terms" required />
+                    <Checkbox id="terms" required disabled={loading} />
                     <Label
                       htmlFor="terms"
                       className="text-sm font-normal text-muted-foreground"
@@ -151,8 +163,8 @@ export default function SignupPage() {
                       .
                     </Label>
                   </div>
-                <Button type="submit" className="w-full mt-2">
-                  Create Account
+                <Button type="submit" className="w-full mt-2" disabled={loading}>
+                  {loading ? "Creating Account..." : "Create Account"}
                 </Button>
               </div>
             </form>
@@ -166,7 +178,7 @@ export default function SignupPage() {
                 </span>
               </div>
             </div>
-            <Button variant="outline" type="button" className="w-full mt-4" onClick={handleGoogleSignUp}>
+            <Button variant="outline" type="button" className="w-full mt-4" onClick={handleGoogleSignUp} disabled={loading}>
                 <svg
                   className="mr-2 h-4 w-4"
                   role="img"
