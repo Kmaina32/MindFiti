@@ -4,7 +4,7 @@ import {
   BookHeart,
   Home,
   LogOut,
-  PanelLeft,
+  ClipboardCheck,
   Settings,
   ShieldAlert,
   User,
@@ -77,7 +77,7 @@ export default function DashboardLayout({
                     children: "Assessments",
                   }}
                 >
-                  <BookHeart />
+                  <ClipboardCheck />
                   <span>Assessments</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>

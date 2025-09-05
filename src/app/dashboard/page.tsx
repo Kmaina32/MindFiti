@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
-import { auth } from "@/lib/firebase"
+import { auth, db } from "@/lib/firebase"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -11,17 +11,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
   ArrowRight,
   BookHeart,
   ClipboardCheck,
 } from "lucide-react"
 import Link from "next/link"
+import { doc, getDoc } from "firebase/firestore"
 
 export default function DashboardPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const [firstName, setFirstName] = useState("there");
+
 
   useEffect(() => {
     if (!loading && !user) {
@@ -29,11 +32,25 @@ export default function DashboardPage() {
     }
   }, [user, loading, router])
 
+  useEffect(() => {
+    if (user) {
+      const fetchUserData = async () => {
+        if (!user.uid) return;
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setFirstName(userData.firstName || "there");
+        }
+      };
+      fetchUserData();
+    }
+  }, [user]);
+
+
   if (loading || !user) {
     return null
   }
-
-  const firstName = user.displayName?.split(" ")[0] || "there"
 
   return (
     <div className="flex flex-col gap-8">
