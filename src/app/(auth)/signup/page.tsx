@@ -41,46 +41,63 @@ export default function SignupPage() {
   const [lastName, setLastName] = useState("");
   const [role, setRole] = useState("client");
   const [showRoleDialog, setShowRoleDialog] = useState(false);
-  const [googleUser, setGoogleUser] = useState<User | null>(null);
+  const [pendingUser, setPendingUser] = useState<User | null>(null);
 
+  const handleRedirect = (role: string) => {
+    switch (role) {
+      case 'admin':
+        router.push('/admin/dashboard');
+        break;
+      case 'provider':
+        router.push('/provider/dashboard');
+        break;
+      default:
+        router.push('/dashboard');
+        break;
+    }
+  };
+
+  const createFirestoreUser = async (user: User, userRole: string, fName?: string, lName?: string) => {
+     await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        firstName: fName || user.displayName?.split(" ")[0] || "",
+        lastName: lName || user.displayName?.split(" ").slice(1).join(" ") || "",
+        email: user.email,
+        role: userRole,
+      });
+  }
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
       const userRole = email === 'gmaina4242@gmail.com' ? 'admin' : role;
 
-      // Store user info in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        firstName,
-        lastName,
-        email,
-        role: userRole,
-      });
-
+      await createFirestoreUser(user, userRole, firstName, lastName);
+      
       toast({
         title: "Account Created",
-        description: "You have successfully created an account.",
+        description: "Welcome to MindFiti!",
       });
 
-      if (userRole === 'admin') {
-        router.push("/admin/dashboard");
-      } else if (userRole === 'provider') {
-        router.push('/provider/dashboard');
-      }
-      else {
-        router.push("/dashboard");
-      }
+      handleRedirect(userRole);
 
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Signup Failed",
-        description: error.message,
-      });
+      if (error.code === 'auth/email-already-in-use') {
+        toast({
+          variant: "destructive",
+          title: "Signup Failed",
+          description: "This email is already in use. Please log in.",
+        });
+        router.push('/login');
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Signup Failed",
+          description: error.message,
+        });
+      }
     }
   };
 
@@ -90,22 +107,15 @@ export default function SignupPage() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Check if user already exists
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        const userData = docSnap.data();
-        if (userData.role === 'admin') {
-           router.push("/admin/dashboard");
-        } else if (userData.role === 'provider') {
-          router.push("/provider/dashboard");
-        } else {
-          router.push("/dashboard");
-        }
+        // User already exists, treat as login
+        handleRedirect(docSnap.data().role);
       } else {
         // New user, prompt for role
-        setGoogleUser(user);
+        setPendingUser(user);
         setShowRoleDialog(true);
       }
     } catch (error: any) {
@@ -117,35 +127,22 @@ export default function SignupPage() {
     }
   };
 
-  const handleGoogleRoleSelection = async () => {
-    if (!googleUser) return;
+  const handleRoleSelection = async () => {
+    if (!pendingUser) return;
     
-    const user = googleUser;
-    const userRole = user.email === 'gmaina4242@gmail.com' ? 'admin' : role;
+    const userRole = pendingUser.email === 'gmaina4242@gmail.com' ? 'admin' : role;
 
     try {
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        firstName: user.displayName?.split(" ")[0] || "",
-        lastName: user.displayName?.split(" ").slice(1).join(" ") || "",
-        email: user.email,
-        role: userRole,
-      });
-
+      await createFirestoreUser(pendingUser, userRole);
+      
       toast({
         title: "Account Created",
-        description: "You have successfully created an account with Google.",
+        description: "Welcome to MindFiti!",
       });
 
       setShowRoleDialog(false);
+      handleRedirect(userRole);
 
-      if (userRole === 'admin') {
-        router.push("/admin/dashboard");
-      } else if (role === 'provider') {
-        router.push("/provider/dashboard");
-      } else {
-        router.push("/dashboard");
-      }
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -341,7 +338,7 @@ export default function SignupPage() {
             </RadioGroup>
           </div>
           <AlertDialogFooter>
-            <Button onClick={handleGoogleRoleSelection} className="w-full">
+            <Button onClick={handleRoleSelection} className="w-full">
               Complete Sign-Up
             </Button>
           </AlertDialogFooter>

@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  User
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
@@ -31,37 +32,51 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const handleRedirect = (role: string) => {
+    switch (role) {
+      case 'admin':
+        router.push('/admin/dashboard');
+        break;
+      case 'provider':
+        router.push('/provider/dashboard');
+        break;
+      default:
+        router.push('/dashboard');
+        break;
+    }
+  };
+
+  const handleLoginSuccess = async (user: User) => {
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
+      handleRedirect(userData.role);
+    } else {
+      // This case might happen if a user authenticated but didn't complete signup.
+      // Send them to signup to choose a role.
+      toast({
+        title: "Complete Your Profile",
+        description: "Please select an account type to continue.",
+      });
+      router.push("/signup");
+    }
+  };
+
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      if (user.email === 'gmaina4242@gmail.com') {
-        router.push('/admin/dashboard');
-        return;
-      }
-      
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        if (userData.role === 'provider') {
-          router.push("/provider/dashboard");
-        } else {
-          router.push("/dashboard");
-        }
-      } else {
-        // Default redirect if user document doesn't exist
-        router.push("/dashboard");
-      }
-
+      await handleLoginSuccess(userCredential.user);
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Login Failed",
-        description: error.message,
+        description: error.code === 'auth/invalid-credential' 
+          ? 'Invalid email or password.'
+          : error.message,
       });
     }
   };
@@ -70,33 +85,7 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      if (user.email === 'gmaina4242@gmail.com') {
-        router.push('/admin/dashboard');
-        return;
-      }
-
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        if (userData.role === 'provider') {
-          router.push("/provider/dashboard");
-        } else {
-          router.push("/dashboard");
-        }
-      } else {
-        // This can happen if the user signs in with Google but hasn't completed the signup form with a role
-        // Redirect them to signup to complete their profile
-        toast({
-          title: "Complete Your Profile",
-          description: "It looks like you're new here. Please select an account type to continue.",
-        });
-        router.push("/signup");
-      }
-
+      await handleLoginSuccess(result.user);
     } catch (error: any) {
       toast({
         variant: "destructive",
