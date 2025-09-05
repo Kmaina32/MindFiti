@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 
 export default function SettingsPage() {
   return (
@@ -13,7 +14,7 @@ export default function SettingsPage() {
       <div>
         <h1 className="text-2xl font-bold">Settings</h1>
         <p className="text-muted-foreground">
-          Manage your account settings and preferences.
+          Manage your account settings, preferences, and data.
         </p>
       </div>
       <Separator />
@@ -50,11 +51,40 @@ export default function SettingsPage() {
                   placeholder="amina@example.com"
                 />
               </div>
-              <Button>Update Profile</Button>
+              <Button disabled>Update Profile</Button>
             </CardContent>
           </Card>
         </div>
       </div>
+      <Separator />
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="md:col-span-1">
+            <h2 className="text-lg font-semibold">Notifications</h2>
+            <p className="text-sm text-muted-foreground">
+            Manage how you receive notifications from us.
+            </p>
+        </div>
+        <div className="md:col-span-2">
+            <Card>
+                <CardContent className="space-y-4 pt-6">
+                    <div className="flex items-center justify-between">
+                    <div>
+                        <Label htmlFor="email-notifications">Email Notifications</Label>
+                        <p className="text-xs text-muted-foreground">Receive updates and summaries via email.</p>
+                    </div>
+                    <Switch id="email-notifications" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                    <div>
+                        <Label htmlFor="push-notifications">Push Notifications</Label>
+                        <p className="text-xs text-muted-foreground">Get reminders and alerts on your device.</p>
+                    </div>
+                    <Switch id="push-notifications" disabled />
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+        </div>
       <Separator />
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         <div className="md:col-span-1">
@@ -70,7 +100,7 @@ export default function SettingsPage() {
           <Card className="border-destructive">
             <CardContent className="flex items-center justify-between pt-6">
               <p className="font-semibold">I understand the consequences.</p>
-              <Button variant="destructive">Delete My Account</Button>
+              <Button variant="destructive" disabled>Delete My Account</Button>
             </CardContent>
           </Card>
         </div>
@@ -78,3 +108,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+
