@@ -43,16 +43,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           if (docSnap.exists()) {
             setUserProfile(docSnap.data() as UserProfile);
           } else {
-            console.warn(`No user profile found in Firestore for UID: ${user.uid}. Creating a new record.`);
+            console.warn(`No user profile found in Firestore for UID: ${user.uid}. A new record will be created on signup or first login if needed.`);
             setUserProfile(null);
           }
         } catch (error: any) {
             if (error.code === 'unavailable') {
-                console.error("Firebase Error: The client is offline or the Firestore database is not enabled. Please go to your Firebase project console, select 'Firestore Database', and ensure it is created and enabled.");
+                // This error means the client is offline or Firestore is not enabled.
+                // We will handle this gracefully by setting userProfile to null and letting the UI
+                // decide what to do. A warning is logged in firebase.ts.
+                setUserProfile(null);
             } else {
                 console.error("An error occurred while fetching user profile:", error);
+                setUserProfile(null);
             }
-            setUserProfile(null);
         }
       } else {
         setUser(null);
