@@ -1,10 +1,6 @@
 
 "use client"
 
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/context/auth-context"
-import { db } from "@/lib/firebase"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -12,57 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useEffect, useState } from "react"
 import {
   ArrowRight,
   BookHeart,
   ClipboardCheck,
 } from "lucide-react"
 import Link from "next/link"
-import { doc, getDoc } from "firebase/firestore"
+import { Button } from "@/components/ui/button"
 
 export default function DashboardPage() {
-  const { user, loading } = useAuth()
-  const router = useRouter()
-  const [firstName, setFirstName] = useState("there");
-  const [userRole, setUserRole] = useState<string | null>(null);
-
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login")
-    }
-  }, [user, loading, router])
-
-  useEffect(() => {
-    if (user) {
-      const fetchUserData = async () => {
-        if (!user.uid) return;
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          setFirstName(userData.firstName || "there");
-          setUserRole(userData.role);
-
-          if (userData.role === 'provider') {
-            router.replace('/provider/dashboard');
-          } else if (userData.role === 'admin') {
-            router.replace('/admin/dashboard');
-          }
-
-        } else {
-          router.push("/login") // Or maybe a page to complete profile
-        }
-      };
-      fetchUserData();
-    }
-  }, [user, router]);
-
-
-  if (loading || !user || userRole === 'provider' || userRole === 'admin') {
-    return null // Or a loading spinner
-  }
+  const firstName = "there";
 
   return (
     <div className="flex flex-col gap-8">

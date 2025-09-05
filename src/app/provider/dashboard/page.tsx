@@ -1,8 +1,6 @@
+
 "use client"
 
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/context/auth-context"
-import { auth, db } from "@/lib/firebase"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -11,50 +9,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useEffect, useState } from "react"
 import {
   ArrowRight,
   Users,
   Calendar,
 } from "lucide-react"
 import Link from "next/link"
-import { doc, getDoc } from "firebase/firestore"
 
 export default function ProviderDashboardPage() {
-  const { user, loading } = useAuth()
-  const router = useRouter()
-  const [firstName, setFirstName] = useState("Provider");
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login")
-    }
-  }, [user, loading, router])
-
-  useEffect(() => {
-    if (user) {
-      const fetchUserData = async () => {
-        if (!user.uid) return;
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          setFirstName(userData.firstName || "Provider");
-          if (userData.role !== 'provider') {
-            router.replace('/dashboard');
-          }
-        } else {
-            router.push('/login')
-        }
-      };
-      fetchUserData();
-    }
-  }, [user, router]);
-
-
-  if (loading || !user) {
-    return null
-  }
+  const firstName = "Provider";
 
   return (
     <div className="flex flex-col gap-8">

@@ -1,9 +1,6 @@
 
 "use client"
 
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/context/auth-context"
-import { db } from "@/lib/firebase"
 import {
   Card,
   CardContent,
@@ -11,48 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useEffect, useState } from "react"
 import {
   Users,
   BarChart3,
 } from "lucide-react"
-import { doc, getDoc } from "firebase/firestore"
 
 export default function AdminDashboardPage() {
-  const { user, loading } = useAuth()
-  const router = useRouter()
-  const [firstName, setFirstName] = useState("Admin");
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login")
-    }
-  }, [user, loading, router])
-
-  useEffect(() => {
-    if (user) {
-      const fetchUserData = async () => {
-        if (!user.uid) return;
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          setFirstName(userData.firstName || "Admin");
-          if (userData.role !== 'admin') {
-            router.replace(userData.role === 'provider' ? '/provider/dashboard' : '/dashboard');
-          }
-        } else {
-            router.push('/login')
-        }
-      };
-      fetchUserData();
-    }
-  }, [user, router]);
-
-
-  if (loading || !user) {
-    return null
-  }
+  const firstName = "Admin";
 
   return (
     <div className="flex flex-col gap-8">
