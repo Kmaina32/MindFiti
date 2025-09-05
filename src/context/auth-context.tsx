@@ -69,9 +69,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const value = { user, userProfile, loading };
 
+  if (loading) {
+    return <BrandedLoader />;
+  }
+
   return (
     <AuthContext.Provider value={value}>
-      {loading ? <BrandedLoader /> : children}
+      {children}
     </AuthContext.Provider>
   );
 };
