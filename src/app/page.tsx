@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, BotMessageSquare, BookHeart, BarChart3, ShieldAlert, HeartHandshake, Users } from 'lucide-react';
+import { CheckCircle, BotMessageSquare, BookHeart, BarChart3, ShieldAlert, HeartHandshake, Users, Brain } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { useState } from 'react';
 
@@ -48,20 +48,7 @@ const features = [
   },
 ];
 
-const testimonials: any[] = [
-  // {
-  //   name: 'Amina K.',
-  //   role: 'User in Nairobi',
-  //   quote: 'MindFiti has been a game-changer for my mental health. The AI insights are surprisingly accurate and the journaling feature is my daily go-to.',
-  //   avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d'
-  // },
-  // {
-  //   name: 'Dr. John O.',
-  //   role: 'Clinical Psychologist',
-  //   quote: 'This platform provides accessible, evidence-based tools that empower individuals on their wellness journey. A much-needed resource in our community.',
-  //   avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026703d'
-  // },
-];
+const testimonials: any[] = [];
 
 
 export default function LandingPage() {
@@ -76,8 +63,11 @@ export default function LandingPage() {
             <span className="text-xl font-bold">MindFiti</span>
           </Link>
           <nav className="flex items-center gap-4">
+            <Button variant="ghost" asChild>
+                <Link href="/login">Login</Link>
+            </Button>
             <Button asChild>
-                <Link href="/dashboard">Get Started</Link>
+                <Link href="/signup">Get Started</Link>
             </Button>
           </nav>
         </div>
@@ -98,7 +88,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-8 flex justify-center gap-4">
               <Button size="lg" asChild>
-                <Link href="/dashboard">Get Started for Free</Link>
+                <Link href="/signup">Get Started for Free</Link>
               </Button>
               <Button size="lg" variant="outline">
                 Learn More

@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,8 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 
 export default function SettingsPage() {
+    const { userProfile } = useAuth();
+  
   return (
     <div className="space-y-6">
       <div>
@@ -33,6 +36,7 @@ export default function SettingsPage() {
                 <Input
                   id="firstName"
                   placeholder="Amina"
+                  defaultValue={userProfile?.firstName}
                 />
               </div>
               <div className="space-y-2">
@@ -40,6 +44,7 @@ export default function SettingsPage() {
                 <Input
                   id="lastName"
                   placeholder="Kimani"
+                   defaultValue={userProfile?.lastName}
                 />
               </div>
               <div className="space-y-2">
@@ -49,6 +54,7 @@ export default function SettingsPage() {
                   type="email"
                   disabled
                   placeholder="amina@example.com"
+                  defaultValue={userProfile?.email ?? ""}
                 />
               </div>
               <Button disabled>Update Profile</Button>
@@ -108,4 +114,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-

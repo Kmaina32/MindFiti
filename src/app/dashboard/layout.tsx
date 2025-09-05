@@ -1,5 +1,4 @@
 
-
 "use client"
 
 import {
@@ -21,10 +20,11 @@ import {
   Award,
   CreditCard,
   Phone,
+  User,
 } from "lucide-react"
 
 import Link from "next/link"
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Logo } from "@/components/logo"
 import {
   Collapsible,
@@ -43,7 +43,8 @@ import {
 } from "@/components/ui/sidebar"
 import { Input } from "@/components/ui/input"
 import { UserMenu } from "@/components/user-menu"
-import { cn } from "@/lib/utils"
+import { useAuth } from "@/context/auth-context"
+import { useEffect } from "react"
 
 
 export default function DashboardLayout({
@@ -52,6 +53,20 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
+
+  if (loading || !user) {
+    return null; // Or a branded loader
+  }
+
 
   const isActive = (path: string) => pathname === path
 
@@ -244,6 +259,19 @@ export default function DashboardLayout({
                         >
                         <ShieldAlert />
                         <span>Crisis Support</span>
+                        </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <Link href="/dashboard/profile" passHref>
+                        <SidebarMenuButton
+                        isActive={isActive("/dashboard/profile")}
+                        tooltip={{
+                            children: "Profile",
+                        }}
+                        >
+                        <User />
+                        <span>Profile</span>
                         </SidebarMenuButton>
                     </Link>
                 </SidebarMenuItem>
