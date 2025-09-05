@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, BrainCircuit, BookHeart, ShieldAlert, HeartHandshake, BotMessageSquare, BarChart3, Users, LucideIcon } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { useAuth } from '@/context/auth-context';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const features = [
   {
@@ -142,23 +143,37 @@ export default function LandingPage() {
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Everything you need for your wellness journey</h2>
               <p className="mt-4 text-lg text-muted-foreground">From AI insights to guided programs, we've got you covered.</p>
             </div>
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {features.map((feature) => (
-                <Card key={feature.title} className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-                    <CardHeader>
-                        <div className="flex items-center gap-4">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                                <feature.icon className="h-6 w-6" />
-                            </div>
-                            <CardTitle>{feature.title}</CardTitle>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-muted-foreground">{feature.description}</p>
-                    </CardContent>
-                </Card>
-              ))}
-            </div>
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent>
+                {features.map((feature, index) => (
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                    <div className="p-1 h-full">
+                      <Card className="flex flex-col h-full transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                          <CardHeader>
+                              <div className="flex items-center gap-4">
+                                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                      <feature.icon className="h-6 w-6" />
+                                  </div>
+                                  <CardTitle>{feature.title}</CardTitle>
+                              </div>
+                          </CardHeader>
+                          <CardContent className="flex-grow">
+                              <p className="text-muted-foreground">{feature.description}</p>
+                          </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
           </div>
         </section>
 
