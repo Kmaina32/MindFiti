@@ -12,6 +12,7 @@ import {
   Users2,
   BookOpen,
   Video,
+  BrainCircuit,
 } from "lucide-react"
 
 import Link from "next/link"
@@ -102,6 +103,19 @@ export default function DashboardLayout({
                     >
                     <Video />
                     <span>Telehealth</span>
+                    </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <Link href="/dashboard/insights" passHref>
+                    <SidebarMenuButton
+                    isActive={isActive("/dashboard/insights")}
+                    tooltip={{
+                        children: "Insights",
+                    }}
+                    >
+                    <BrainCircuit />
+                    <span>Behavioral Insights</span>
                     </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
