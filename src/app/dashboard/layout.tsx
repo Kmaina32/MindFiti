@@ -45,6 +45,7 @@ import { Input } from "@/components/ui/input"
 import { UserMenu } from "@/components/user-menu"
 import { useAuth } from "@/context/auth-context"
 import { useEffect } from "react"
+import { BrandedLoader } from "@/components/branded-loader"
 
 
 export default function DashboardLayout({
@@ -54,7 +55,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname()
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, userProfile, loading } = useAuth();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -63,8 +64,8 @@ export default function DashboardLayout({
   }, [user, loading, router]);
 
 
-  if (loading || !user) {
-    return null; // Or a branded loader
+  if (loading || !userProfile) {
+    return <BrandedLoader />;
   }
 
 
