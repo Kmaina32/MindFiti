@@ -8,43 +8,46 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MoreHorizontal, File, PlusCircle, ListFilter } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
-const users = [
-  {
-    name: "Amina Kimani",
-    email: "amina@example.com",
-    role: "client",
-    status: "Active",
-    joined: "2023-06-23",
-    avatar: "https://i.pravatar.cc/150?u=amina@example.com"
-  },
-  {
-    name: "Dr. John O.",
-    email: "john.o@clinic.com",
-    role: "provider",
-    status: "Active",
-    joined: "2023-05-15",
-    avatar: "https://i.pravatar.cc/150?u=john.o@clinic.com"
-  },
-    {
-    name: "Michael Smith",
-    email: "michael.s@test.co",
-    role: "client",
-    status: "Inactive",
-    joined: "2023-07-01",
-    avatar: "https://i.pravatar.cc/150?u=michael.s@test.co"
-  },
-  {
-    name: "Admin User",
-    email: "admin@mindfiti.co",
-    role: "admin",
-    status: "Active",
-    joined: "2023-01-01",
-    avatar: "https://i.pravatar.cc/150?u=admin@mindfiti.co"
-  },
+const users: any[] = [
+  // {
+  //   name: "Amina Kimani",
+  //   email: "amina@example.com",
+  //   role: "client",
+  //   status: "Active",
+  //   joined: "2023-06-23",
+  //   avatar: "https://i.pravatar.cc/150?u=amina@example.com"
+  // },
+  // {
+  //   name: "Dr. John O.",
+  //   email: "john.o@clinic.com",
+  //   role: "provider",
+  //   status: "Active",
+  //   joined: "2023-05-15",
+  //   avatar: "https://i.pravatar.cc/150?u=john.o@clinic.com"
+  // },
+  //   {
+  //   name: "Michael Smith",
+  //   email: "michael.s@test.co",
+  //   role: "client",
+  //   status: "Inactive",
+  //   joined: "2023-07-01",
+  //   avatar: "https://i.pravatar.cc/150?u=michael.s@test.co"
+  // },
+  // {
+  //   name: "Admin User",
+  //   email: "admin@mindfiti.co",
+  //   role: "admin",
+  //   status: "Active",
+  //   joined: "2023-01-01",
+  //   avatar: "https://i.pravatar.cc/150?u=admin@mindfiti.co"
+  // },
 ];
 
 export default function AdminUsersPage() {
+  const [userList, setUserList] = useState(users);
+
   return (
     <Card>
       <CardHeader>
@@ -102,7 +105,7 @@ export default function AdminUsersPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
+            {userList.length > 0 ? userList.map((user) => (
                 <TableRow key={user.email}>
                     <TableCell className="font-medium">
                         <div className="flex items-center gap-3">
@@ -141,7 +144,13 @@ export default function AdminUsersPage() {
                         </DropdownMenu>
                     </TableCell>
                 </TableRow>
-            ))}
+            )) : (
+              <TableRow>
+                <TableCell colSpan={5} className="h-24 text-center">
+                  No users found.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </CardContent>

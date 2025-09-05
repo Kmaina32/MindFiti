@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Video, BookOpen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 const learningCategories = [
     { name: "Understanding Anxiety", icon: <BookOpen /> },
@@ -15,52 +16,54 @@ const learningCategories = [
     { name: "Building Healthy Habits", icon: <Video /> },
 ]
 
-const learningContent = [
-    {
-        title: "What is Anxiety and How Does it Affect Us?",
-        type: "Article",
-        category: "Understanding Anxiety",
-        image: "https://picsum.photos/400/250",
-        dataAiHint: "brain neurons"
-    },
-     {
-        title: "Guided Meditation for Stress Relief",
-        type: "Video",
-        category: "Mindfulness Practices",
-        image: "https://picsum.photos/400/251",
-        dataAiHint: "calm meditation"
-    },
-    {
-        title: "The 5-4-3-2-1 Grounding Technique",
-        type: "Article",
-        category: "Coping Mechanisms",
-        image: "https://picsum.photos/400/252",
-        dataAiHint: "nature walk"
-    },
-    {
-        title: "The Science of Habit Formation",
-        type: "Video",
-        category: "Building Healthy Habits",
-        image: "https://picsum.photos/400/253",
-        dataAiHint: "person running"
-    },
-    {
-        title: "Understanding the Path to Recovery",
-        type: "Article",
-        category: "Addiction & Recovery",
-        image: "https://picsum.photos/400/254",
-        dataAiHint: "support group"
-    },
-    {
-        title: "Deep Breathing Exercises for Calm",
-        type: "Video",
-        category: "Coping Mechanisms",
-        image: "https://picsum.photos/400/255",
-        dataAiHint: "deep breathing"
-    },
+const learningContent: any[] = [
+    // {
+    //     title: "What is Anxiety and How Does it Affect Us?",
+    //     type: "Article",
+    //     category: "Understanding Anxiety",
+    //     image: "https://picsum.photos/400/250",
+    //     dataAiHint: "brain neurons"
+    // },
+    //  {
+    //     title: "Guided Meditation for Stress Relief",
+    //     type: "Video",
+    //     category: "Mindfulness Practices",
+    //     image: "https://picsum.photos/400/251",
+    //     dataAiHint: "calm meditation"
+    // },
+    // {
+    //     title: "The 5-4-3-2-1 Grounding Technique",
+    //     type: "Article",
+    //     category: "Coping Mechanisms",
+    //     image: "https://picsum.photos/400/252",
+    //     dataAiHint: "nature walk"
+    // },
+    // {
+    //     title: "The Science of Habit Formation",
+    //     type: "Video",
+    //     category: "Building Healthy Habits",
+    //     image: "https://picsum.photos/400/253",
+    //     dataAiHint: "person running"
+    // },
+    // {
+    //     title: "Understanding the Path to Recovery",
+    //     type: "Article",
+    //     category: "Addiction & Recovery",
+    //     image: "https://picsum.photos/400/254",
+    //     dataAiHint: "support group"
+    // },
+    // {
+    //     title: "Deep Breathing Exercises for Calm",
+    //     type: "Video",
+    //     category: "Coping Mechanisms",
+    //     image: "https://picsum.photos/400/255",
+    //     dataAiHint: "deep breathing"
+    // },
 ]
 
 export default function LearnPage() {
+    const [content, setContent] = useState(learningContent);
+
   return (
     <div className="space-y-8">
         <div>
@@ -87,34 +90,42 @@ export default function LearnPage() {
         
         <div className="space-y-6">
             <h2 className="text-2xl font-semibold">Featured Content</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {learningContent.map(content => (
-                    <Link href="#" key={content.title}>
-                        <Card className="overflow-hidden h-full group">
-                            <div className="relative">
-                                <Image 
-                                    src={content.image}
-                                    alt={content.title}
-                                    width={400}
-                                    height={250}
-                                    className="w-full h-48 object-cover transition-transform group-hover:scale-105"
-                                    data-ai-hint={content.dataAiHint}
-                                />
-                                 <div className={`absolute top-2 right-2 flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold text-white ${content.type === 'Video' ? 'bg-primary' : 'bg-accent'}`}>
-                                    {content.type === 'Video' ? <Video className="h-3 w-3" /> : <BookOpen className="h-3 w-3" />}
-                                    <span>{content.type}</span>
+            {content.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {content.map(c => (
+                        <Link href="#" key={c.title}>
+                            <Card className="overflow-hidden h-full group">
+                                <div className="relative">
+                                    <Image 
+                                        src={c.image}
+                                        alt={c.title}
+                                        width={400}
+                                        height={250}
+                                        className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+                                        data-ai-hint={c.dataAiHint}
+                                    />
+                                    <div className={`absolute top-2 right-2 flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold text-white ${c.type === 'Video' ? 'bg-primary' : 'bg-accent'}`}>
+                                        {c.type === 'Video' ? <Video className="h-3 w-3" /> : <BookOpen className="h-3 w-3" />}
+                                        <span>{c.type}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <CardHeader>
-                                <CardTitle className="text-lg leading-tight group-hover:text-primary">{content.title}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-sm text-muted-foreground">{content.category}</p>
-                            </CardContent>
-                        </Card>
-                    </Link>
-                ))}
-            </div>
+                                <CardHeader>
+                                    <CardTitle className="text-lg leading-tight group-hover:text-primary">{c.title}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-sm text-muted-foreground">{c.category}</p>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    ))}
+                </div>
+            ) : (
+                <Card>
+                    <CardContent className="py-12 text-center text-muted-foreground">
+                        No learning content available yet.
+                    </CardContent>
+                </Card>
+            )}
         </div>
     </div>
   );

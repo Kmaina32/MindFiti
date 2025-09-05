@@ -8,23 +8,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { PlusCircle } from "lucide-react";
 import Image from "next/image";
 
-const appointments = [
-    {
-        name: "Amina Kimani",
-        time: "10:00 AM - 11:00 AM",
-        type: "Virtual",
-        avatar: "https://i.pravatar.cc/150?u=amina@example.com"
-    },
-    {
-        name: "Michael Smith",
-        time: "2:00 PM - 2:30 PM",
-        type: "In-Person",
-        avatar: "https://i.pravatar.cc/150?u=michael.s@test.co"
-    }
+const appointments: any[] = [
+    // {
+    //     name: "Amina Kimani",
+    //     time: "10:00 AM - 11:00 AM",
+    //     type: "Virtual",
+    //     avatar: "https://i.pravatar.cc/150?u=amina@example.com"
+    // },
+    // {
+    //     name: "Michael Smith",
+    //     time: "2:00 PM - 2:30 PM",
+    //     type: "In-Person",
+    //     avatar: "https://i.pravatar.cc/150?u=michael.s@test.co"
+    // }
 ]
 
 export default function AppointmentsPage() {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [scheduledAppointments, setScheduledAppointments] = useState(appointments);
 
   return (
     <div className="grid gap-6 md:grid-cols-3">
@@ -57,7 +58,7 @@ export default function AppointmentsPage() {
                 <CardTitle>Upcoming - {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-                {appointments.map(appt => (
+                {scheduledAppointments.length > 0 ? scheduledAppointments.map(appt => (
                     <div key={appt.name} className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted">
                         <Image src={appt.avatar} alt={appt.name} width={40} height={40} className="rounded-full"/>
                         <div className="flex-grow">
@@ -66,8 +67,9 @@ export default function AppointmentsPage() {
                         </div>
                         <Badge variant={appt.type === 'Virtual' ? 'default' : 'secondary'}>{appt.type}</Badge>
                     </div>
-                ))}
-                {appointments.length === 0 && <p className="text-muted-foreground">No upcoming appointments.</p>}
+                )) : (
+                  <p className="text-muted-foreground text-center py-4">No upcoming appointments today.</p>
+                )}
             </CardContent>
         </Card>
       </div>

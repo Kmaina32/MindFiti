@@ -6,29 +6,32 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Globe, MapPin, Phone, Search } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
-const localResources = [
-    {
-        name: "Nairobi Mental Health Support Center",
-        address: "123 Afya Road, Nairobi, Kenya",
-        phone: "+254 712 345 678",
-        services: ["Counseling", "Support Groups", "Workshops"]
-    },
-    {
-        name: "Coastal Wellness Clinic",
-        address: "456 Bahari Avenue, Mombasa, Kenya",
-        phone: "+254 723 456 789",
-        services: ["Psychiatry", "Addiction Support"]
-    },
-    {
-        name: "Rift Valley Counseling Partners",
-        address: "789 Upendo Lane, Nakuru, Kenya",
-        phone: "+254 734 567 890",
-        services: ["Family Therapy", "Youth Counseling"]
-    }
+const localResources: any[] = [
+    // {
+    //     name: "Nairobi Mental Health Support Center",
+    //     address: "123 Afya Road, Nairobi, Kenya",
+    //     phone: "+254 712 345 678",
+    //     services: ["Counseling", "Support Groups", "Workshops"]
+    // },
+    // {
+    //     name: "Coastal Wellness Clinic",
+    //     address: "456 Bahari Avenue, Mombasa, Kenya",
+    //     phone: "+254 723 456 789",
+    //     services: ["Psychiatry", "Addiction Support"]
+    // },
+    // {
+    //     name: "Rift Valley Counseling Partners",
+    //     address: "789 Upendo Lane, Nakuru, Kenya",
+    //     phone: "+254 734 567 890",
+    //     services: ["Family Therapy", "Youth Counseling"]
+    // }
 ]
 
 export default function LocalSupportPage() {
+    const [resources, setResources] = useState(localResources);
+
   return (
     <div className="space-y-8">
       <div>
@@ -43,7 +46,7 @@ export default function LocalSupportPage() {
       
       <div className="grid lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 space-y-6">
-            {localResources.map(resource => (
+            {resources.length > 0 ? resources.map(resource => (
                 <Card key={resource.name}>
                     <CardHeader>
                         <CardTitle>{resource.name}</CardTitle>
@@ -60,14 +63,20 @@ export default function LocalSupportPage() {
                         <div>
                             <h4 className="font-semibold mb-2">Services:</h4>
                             <div className="flex flex-wrap gap-2">
-                                {resource.services.map(service => (
+                                {resource.services.map((service: string) => (
                                     <span key={service} className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full">{service}</span>
                                 ))}
                             </div>
                         </div>
                     </CardContent>
                 </Card>
-            ))}
+            )) : (
+                <Card>
+                    <CardContent className="py-12 text-center text-muted-foreground">
+                        No local resources found. Please try a different search.
+                    </CardContent>
+                </Card>
+            )}
         </div>
         <div className="lg:col-span-1">
             <Card className="overflow-hidden">

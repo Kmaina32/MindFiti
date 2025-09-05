@@ -4,10 +4,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { CheckCircle, BrainCircuit, BookHeart, ShieldAlert, HeartHandshake, BotMessageSquare, BarChart3, Users, LucideIcon } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CheckCircle, BotMessageSquare, BookHeart, BarChart3, ShieldAlert, HeartHandshake, Users } from 'lucide-react';
 import { Logo } from '@/components/logo';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { useState } from 'react';
 
 const features = [
   {
@@ -48,23 +48,24 @@ const features = [
   },
 ];
 
-const testimonials = [
-  {
-    name: 'Amina K.',
-    role: 'User in Nairobi',
-    quote: 'MindFiti has been a game-changer for my mental health. The AI insights are surprisingly accurate and the journaling feature is my daily go-to.',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d'
-  },
-  {
-    name: 'Dr. John O.',
-    role: 'Clinical Psychologist',
-    quote: 'This platform provides accessible, evidence-based tools that empower individuals on their wellness journey. A much-needed resource in our community.',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026703d'
-  },
+const testimonials: any[] = [
+  // {
+  //   name: 'Amina K.',
+  //   role: 'User in Nairobi',
+  //   quote: 'MindFiti has been a game-changer for my mental health. The AI insights are surprisingly accurate and the journaling feature is my daily go-to.',
+  //   avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d'
+  // },
+  // {
+  //   name: 'Dr. John O.',
+  //   role: 'Clinical Psychologist',
+  //   quote: 'This platform provides accessible, evidence-based tools that empower individuals on their wellness journey. A much-needed resource in our community.',
+  //   avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026703d'
+  // },
 ];
 
 
 export default function LandingPage() {
+  const [testimonialList, setTestimonialList] = useState(testimonials);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -154,7 +155,7 @@ export default function LandingPage() {
                 </li>
               </ul>
               <Button size="lg" className="mt-8" asChild>
-                <Link href="/assessment">Start Your Assessment</Link>
+                <Link href="/dashboard/assessment">Start Your Assessment</Link>
               </Button>
             </div>
             <div className="flex justify-center">
@@ -176,24 +177,32 @@ export default function LandingPage() {
                     <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Trusted by users and professionals</h2>
                     <p className="mt-4 text-lg text-muted-foreground">Here's what people are saying about MindFiti.</p>
                 </div>
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                    {testimonials.map((testimonial, index) => (
-                        <Card key={index} className="flex flex-col justify-between">
-                            <CardContent className="pt-6">
-                                <p className="mb-4 text-lg italic">"{testimonial.quote}"</p>
-                            </CardContent>
-                            <CardHeader>
-                                <div className="flex items-center gap-4">
-                                    <Image src={testimonial.avatar} alt={testimonial.name} width={48} height={48} className="rounded-full" />
-                                    <div>
-                                        <p className="font-semibold">{testimonial.name}</p>
-                                        <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                                    </div>
-                                </div>
-                            </CardHeader>
-                        </Card>
-                    ))}
-                </div>
+                {testimonialList.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                      {testimonialList.map((testimonial, index) => (
+                          <Card key={index} className="flex flex-col justify-between">
+                              <CardContent className="pt-6">
+                                  <p className="mb-4 text-lg italic">"{testimonial.quote}"</p>
+                              </CardContent>
+                              <CardHeader>
+                                  <div className="flex items-center gap-4">
+                                      <Image src={testimonial.avatar} alt={testimonial.name} width={48} height={48} className="rounded-full" />
+                                      <div>
+                                          <p className="font-semibold">{testimonial.name}</p>
+                                          <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                                      </div>
+                                  </div>
+                              </CardHeader>
+                          </Card>
+                      ))}
+                  </div>
+                ) : (
+                  <Card>
+                    <CardContent className="py-12 text-center text-muted-foreground">
+                      No testimonials yet. Be the first to share your story!
+                    </CardContent>
+                  </Card>
+                )}
             </div>
         </section>
 

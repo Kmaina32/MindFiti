@@ -8,50 +8,54 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Heart, MessageSquare, Search, Users, PlusCircle } from "lucide-react";
+import { useState } from "react";
 
-const communityPosts = [
-  {
-    id: 1,
-    author: "Jane Doe",
-    avatar: "https://i.pravatar.cc/150?u=jane.doe@example.com",
-    time: "2 hours ago",
-    content: "Just completed a mindfulness session using one of the recommended apps. Feeling so much calmer now. It's amazing how a few minutes of deep breathing can change your whole outlook.",
-    likes: 12,
-    comments: 3,
-  },
-  {
-    id: 2,
-    author: "David Lee",
-    avatar: "https://i.pravatar.cc/150?u=david.lee@example.com",
-    time: "5 hours ago",
-    content: "Struggling with motivation today. Any tips for getting out of a slump when you have a lot to do?",
-    likes: 5,
-    comments: 8,
-  },
+const communityPosts: any[] = [
+  // {
+  //   id: 1,
+  //   author: "Jane Doe",
+  //   avatar: "https://i.pravatar.cc/150?u=jane.doe@example.com",
+  //   time: "2 hours ago",
+  //   content: "Just completed a mindfulness session using one of the recommended apps. Feeling so much calmer now. It's amazing how a few minutes of deep breathing can change your whole outlook.",
+  //   likes: 12,
+  //   comments: 3,
+  // },
+  // {
+  //   id: 2,
+  //   author: "David Lee",
+  //   avatar: "https://i.pravatar.cc/150?u=david.lee@example.com",
+  //   time: "5 hours ago",
+  //   content: "Struggling with motivation today. Any tips for getting out of a slump when you have a lot to do?",
+  //   likes: 5,
+  //   comments: 8,
+  // },
 ];
 
-const communityGroups = [
-  {
-    name: "Anxiety Support Group",
-    members: 128,
-    description: "A safe space to share and learn about managing anxiety.",
-    dataAiHint: "support group"
-  },
-  {
-    name: "Mindful Living",
-    members: 250,
-    description: "For anyone interested in practicing mindfulness and meditation.",
-    dataAiHint: "meditation group"
-  },
-  {
-    name: "Recovery Circle",
-    members: 75,
-    description: "Support and encouragement for those on the path to recovery.",
-    dataAiHint: "recovery journey"
-  },
+const communityGroups: any[] = [
+  // {
+  //   name: "Anxiety Support Group",
+  //   members: 128,
+  //   description: "A safe space to share and learn about managing anxiety.",
+  //   dataAiHint: "support group"
+  // },
+  // {
+  //   name: "Mindful Living",
+  //   members: 250,
+  //   description: "For anyone interested in practicing mindfulness and meditation.",
+  //   dataAiHint: "meditation group"
+  // },
+  // {
+  //   name: "Recovery Circle",
+  //   members: 75,
+  //   description: "Support and encouragement for those on the path to recovery.",
+  //   dataAiHint: "recovery journey"
+  // },
 ]
 
 export default function CommunityPage() {
+  const [posts, setPosts] = useState(communityPosts);
+  const [groups, setGroups] = useState(communityGroups);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
       <div className="md:col-span-2 space-y-6">
@@ -80,7 +84,7 @@ export default function CommunityPage() {
             </div>
           </div>
           <TabsContent value="recent" className="space-y-4">
-            {communityPosts.map(post => (
+            {posts.length > 0 ? posts.map(post => (
               <Card key={post.id}>
                 <CardHeader>
                   <div className="flex items-center gap-3">
@@ -106,7 +110,13 @@ export default function CommunityPage() {
                   </Button>
                 </CardContent>
               </Card>
-            ))}
+            )) : (
+              <Card>
+                <CardContent className="py-8 text-center text-muted-foreground">
+                  No recent posts. Start the conversation!
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
           <TabsContent value="popular">
              <p className="text-muted-foreground text-center py-8">Popular posts will be displayed here.</p>
@@ -124,7 +134,7 @@ export default function CommunityPage() {
             <CardDescription>Find a group that fits your needs and join the conversation.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {communityGroups.map(group => (
+            {groups.length > 0 ? groups.map(group => (
                <div key={group.name} className="flex items-start gap-4 p-2 rounded-lg hover:bg-muted">
                     <div className="bg-primary/10 text-primary p-2 rounded-lg">
                         <Users className="h-6 w-6"/>
@@ -135,7 +145,11 @@ export default function CommunityPage() {
                     </div>
                     <Button variant="outline" size="sm">Join</Button>
                 </div>
-            ))}
+            )) : (
+              <div className="text-center text-muted-foreground py-4">
+                No featured groups available.
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

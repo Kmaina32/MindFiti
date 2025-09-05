@@ -2,39 +2,42 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
-const clients = [
-  {
-    name: "Amina Kimani",
-    email: "amina@example.com",
-    status: "Active",
-    lastSession: "2024-07-28",
-    avatar: "https://i.pravatar.cc/150?u=amina@example.com"
-  },
-  {
-    name: "Michael Smith",
-    email: "michael.s@test.co",
-    status: "Active",
-    lastSession: "2024-07-25",
-    avatar: "https://i.pravatar.cc/150?u=michael.s@test.co"
-  },
-  {
-    name: "Jessica Williams",
-    email: "jess.w@email.com",
-    status: "Onboarding",
-    lastSession: "N/A",
-    avatar: "https://i.pravatar.cc/150?u=jess.w@email.com"
-  },
+const clients: any[] = [
+  // {
+  //   name: "Amina Kimani",
+  //   email: "amina@example.com",
+  //   status: "Active",
+  //   lastSession: "2024-07-28",
+  //   avatar: "https://i.pravatar.cc/150?u=amina@example.com"
+  // },
+  // {
+  //   name: "Michael Smith",
+  //   email: "michael.s@test.co",
+  //   status: "Active",
+  //   lastSession: "2024-07-25",
+  //   avatar: "https://i.pravatar.cc/150?u=michael.s@test.co"
+  // },
+  // {
+  //   name: "Jessica Williams",
+  //   email: "jess.w@email.com",
+  //   status: "Onboarding",
+  //   lastSession: "N/A",
+  //   avatar: "https://i.pravatar.cc/150?u=jess.w@email.com"
+  // },
 ];
 
 
 export default function ClientsPage() {
+  const [clientList, setClientList] = useState(clients);
+
   return (
     <div className="flex flex-col gap-6">
        <div className="flex justify-between items-center">
@@ -65,7 +68,7 @@ export default function ClientsPage() {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {clients.map((client) => (
+                {clientList.length > 0 ? clientList.map((client) => (
                     <TableRow key={client.email}>
                         <TableCell className="font-medium">
                             <div className="flex items-center gap-3">
@@ -101,7 +104,13 @@ export default function ClientsPage() {
                             </DropdownMenu>
                         </TableCell>
                     </TableRow>
-                ))}
+                )) : (
+                  <TableRow>
+                    <TableCell colSpan={4} className="h-24 text-center">
+                      No clients found.
+                    </TableCell>
+                  </TableRow>
+                )}
             </TableBody>
             </Table>
         </CardContent>

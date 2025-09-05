@@ -22,13 +22,13 @@ import {
 } from "@/components/ui/chart"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
-const chartData = [
-  { date: "2023-01", mood: 3 },
-  { date: "2023-02", mood: 4 },
-  { date: "2023-03", mood: 3 },
-  { date: "2023-04", mood: 5 },
-  { date: "2023-05", mood: 4 },
-  { date: "2023-06", mood: 5 },
+const chartData: any[] = [
+  // { date: "2023-01", mood: 3 },
+  // { date: "2023-02", mood: 4 },
+  // { date: "2023-03", mood: 3 },
+  // { date: "2023-04", mood: 5 },
+  // { date: "2023-05", mood: 4 },
+  // { date: "2023-06", mood: 5 },
 ]
 
 const chartConfig = {
@@ -61,36 +61,42 @@ export default function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-grow">
-             <ChartContainer config={chartConfig} className="h-full w-full">
-              <AreaChart
-                accessibilityLayer
-                data={chartData}
-                margin={{
-                  left: -20,
-                  right: 12,
-                }}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent indicator="dot" />}
-                />
-                <Area
-                  dataKey="mood"
-                  type="natural"
-                  fill="var(--color-mood)"
-                  fillOpacity={0.4}
-                  stroke="var(--color-mood)"
-                  stackId="a"
-                />
-              </AreaChart>
-            </ChartContainer>
+            {chartData.length > 0 ? (
+               <ChartContainer config={chartConfig} className="h-full w-full">
+                <AreaChart
+                  accessibilityLayer
+                  data={chartData}
+                  margin={{
+                    left: -20,
+                    right: 12,
+                  }}
+                >
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="dot" />}
+                  />
+                  <Area
+                    dataKey="mood"
+                    type="natural"
+                    fill="var(--color-mood)"
+                    fillOpacity={0.4}
+                    stroke="var(--color-mood)"
+                    stackId="a"
+                  />
+                </AreaChart>
+              </ChartContainer>
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                <p className="text-muted-foreground">No mood data yet. Start journaling to see your trend.</p>
+              </div>
+            )}
           </CardContent>
         </Card>
          <div className="space-y-6">

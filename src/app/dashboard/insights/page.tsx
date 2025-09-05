@@ -6,29 +6,32 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowUpRight, BrainCircuit, Mic, Palette } from "lucide-react";
+import { useState } from "react";
 
-const insightPatterns = [
-  {
-    title: "Improved Sleep Pattern",
-    value: "+15%",
-    description: "Your sleep quality has improved by 15% over the past week.",
-    variant: "success"
-  },
-  {
-    title: "Active Day Correlation",
-    value: "+23%",
-    description: "Days with more activity correlate with better mood scores.",
-    variant: "success"
-  },
-  {
-    title: "Evening Mood Dips",
-    value: "-8%",
-    description: "Your mood typically decreases between 6-8 PM.",
-    variant: "warning"
-  },
+const insightPatterns: any[] = [
+  // {
+  //   title: "Improved Sleep Pattern",
+  //   value: "+15%",
+  //   description: "Your sleep quality has improved by 15% over the past week.",
+  //   variant: "success"
+  // },
+  // {
+  //   title: "Active Day Correlation",
+  //   value: "+23%",
+  //   description: "Days with more activity correlate with better mood scores.",
+  //   variant: "success"
+  // },
+  // {
+  //   title: "Evening Mood Dips",
+  //   value: "-8%",
+  //   description: "Your mood typically decreases between 6-8 PM.",
+  //   variant: "warning"
+  // },
 ];
 
 export default function BehavioralInsightsPage() {
+  const [patterns, setPatterns] = useState(insightPatterns);
+
   return (
     <div className="space-y-8">
       <div>
@@ -63,24 +66,30 @@ export default function BehavioralInsightsPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <h3 className="text-lg font-semibold text-center">Your Recent Patterns</h3>
-                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {insightPatterns.map((pattern) => (
-                        <Card key={pattern.title} className="flex flex-col">
-                            <CardHeader className="flex-row items-center justify-between pb-2">
-                                <CardTitle className="text-base font-medium">{pattern.title}</CardTitle>
-                                 <Badge variant={pattern.variant === "success" ? "default" : "destructive"}>
-                                    DEMO
-                                 </Badge>
-                            </CardHeader>
-                            <CardContent className="flex-grow space-y-2">
-                                <div className="text-4xl font-bold">{pattern.value}</div>
-                                <p className="text-xs text-muted-foreground">
-                                    {pattern.description}
-                                </p>
-                            </CardContent>
-                        </Card>
-                        ))}
-                    </div>
+                    {patterns.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {patterns.map((pattern) => (
+                          <Card key={pattern.title} className="flex flex-col">
+                              <CardHeader className="flex-row items-center justify-between pb-2">
+                                  <CardTitle className="text-base font-medium">{pattern.title}</CardTitle>
+                                  <Badge variant={pattern.variant === "success" ? "default" : "destructive"}>
+                                      DEMO
+                                  </Badge>
+                              </CardHeader>
+                              <CardContent className="flex-grow space-y-2">
+                                  <div className="text-4xl font-bold">{pattern.value}</div>
+                                  <p className="text-xs text-muted-foreground">
+                                      {pattern.description}
+                                  </p>
+                              </CardContent>
+                          </Card>
+                          ))}
+                      </div>
+                    ) : (
+                      <div className="text-center text-muted-foreground py-12">
+                        No patterns detected yet. Start journaling to see your insights.
+                      </div>
+                    )}
                 </CardContent>
             </Card>
         </TabsContent>

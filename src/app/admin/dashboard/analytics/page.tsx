@@ -8,13 +8,13 @@ import {
 } from "@/components/ui/chart"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
-const chartData = [
-  { month: "January", users: 186, providers: 80 },
-  { month: "February", users: 305, providers: 200 },
-  { month: "March", users: 237, providers: 120 },
-  { month: "April", users: 73, providers: 190 },
-  { month: "May", users: 209, providers: 130 },
-  { month: "June", users: 214, providers: 140 },
+const chartData: any[] = [
+  // { month: "January", users: 186, providers: 80 },
+  // { month: "February", users: 305, providers: 200 },
+  // { month: "March", users: 237, providers: 120 },
+  // { month: "April", users: 73, providers: 190 },
+  // { month: "May", users: 209, providers: 130 },
+  // { month: "June", users: 214, providers: 140 },
 ]
 
 const chartConfig = {
@@ -37,24 +37,30 @@ export default function AdminAnalyticsPage() {
           <CardDescription>Monthly new user and provider sign-ups.</CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="h-72 w-full">
-            <BarChart data={chartData} accessibilityLayer>
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-              />
-              <YAxis />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dot" />}
-              />
-              <Bar dataKey="users" fill="var(--color-users)" radius={4} />
-              <Bar dataKey="providers" fill="var(--color-providers)" radius={4} />
-            </BarChart>
-          </ChartContainer>
+          {chartData.length > 0 ? (
+            <ChartContainer config={chartConfig} className="h-72 w-full">
+              <BarChart data={chartData} accessibilityLayer>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                />
+                <YAxis />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="dot" />}
+                />
+                <Bar dataKey="users" fill="var(--color-users)" radius={4} />
+                <Bar dataKey="providers" fill="var(--color-providers)" radius={4} />
+              </BarChart>
+            </ChartContainer>
+          ) : (
+            <div className="flex h-72 w-full items-center justify-center">
+              <p className="text-muted-foreground">No data to display.</p>
+            </div>
+          )}
         </CardContent>
       </Card>
       <Card>

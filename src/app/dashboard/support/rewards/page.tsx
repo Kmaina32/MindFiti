@@ -5,24 +5,26 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Award, Star, Gift } from "lucide-react";
+import { useState } from "react";
 
-const rewards = [
-    {
-        title: "1-Month Free Premium",
-        cost: 5000,
-    },
-    {
-        title: "30-Minute Coaching Session",
-        cost: 3500,
-    },
-    {
-        title: "MindFiti Branded Journal",
-        cost: 2000,
-    }
+const rewards: any[] = [
+    // {
+    //     title: "1-Month Free Premium",
+    //     cost: 5000,
+    // },
+    // {
+    //     title: "30-Minute Coaching Session",
+    //     cost: 3500,
+    // },
+    // {
+    //     title: "MindFiti Branded Journal",
+    //     cost: 2000,
+    // }
 ]
 
 export default function RewardsPage() {
-  const userPoints = 1250;
+  const [availableRewards, setAvailableRewards] = useState(rewards);
+  const userPoints = 0;
   const pointsToNextTier = 2000;
   const progress = (userPoints / pointsToNextTier) * 100;
 
@@ -62,25 +64,33 @@ export default function RewardsPage() {
                 <CardTitle>Redeem Rewards</CardTitle>
                 <CardDescription>Use your points to claim these exclusive rewards.</CardDescription>
             </CardHeader>
-            <CardContent className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {rewards.map(reward => (
-                    <Card key={reward.title} className="flex flex-col">
-                        <CardHeader className="flex-grow">
-                            <div className="flex justify-center mb-4">
-                                <div className="p-4 bg-primary/10 rounded-full">
-                                    <Gift className="h-10 w-10 text-primary" />
+            <CardContent>
+                {availableRewards.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {availableRewards.map(reward => (
+                        <Card key={reward.title} className="flex flex-col">
+                            <CardHeader className="flex-grow">
+                                <div className="flex justify-center mb-4">
+                                    <div className="p-4 bg-primary/10 rounded-full">
+                                        <Gift className="h-10 w-10 text-primary" />
+                                    </div>
                                 </div>
-                            </div>
-                            <CardTitle className="text-center text-xl">{reward.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="text-center">
-                            <p className="text-2xl font-bold text-primary mb-4">{reward.cost.toLocaleString()} pts</p>
-                            <Button className="w-full" disabled={userPoints < reward.cost}>
-                                {userPoints >= reward.cost ? "Redeem" : "Not enough points"}
-                            </Button>
-                        </CardContent>
-                    </Card>
-                ))}
+                                <CardTitle className="text-center text-xl">{reward.title}</CardTitle>
+                            </CardHeader>
+                            <CardContent className="text-center">
+                                <p className="text-2xl font-bold text-primary mb-4">{reward.cost.toLocaleString()} pts</p>
+                                <Button className="w-full" disabled={userPoints < reward.cost}>
+                                    {userPoints >= reward.cost ? "Redeem" : "Not enough points"}
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+                ) : (
+                    <div className="text-center text-muted-foreground py-12">
+                        No rewards available to redeem right now. Check back later!
+                    </div>
+                )}
             </CardContent>
         </Card>
     </div>

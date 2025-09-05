@@ -15,10 +15,11 @@ import Link from "next/link"
 import { LogOut, Settings, User } from "lucide-react"
 
 export function UserMenu() {
+  // TODO: Replace with real user data from Auth context
   const user = {
-    firstName: 'Amina',
-    lastName: 'Kimani',
-    email: 'amina@example.com',
+    firstName: 'Demo',
+    lastName: 'User',
+    email: 'demo@example.com',
   }
   
   const initials = user ? `${user.firstName[0]}${user.lastName[0]}` : "U"

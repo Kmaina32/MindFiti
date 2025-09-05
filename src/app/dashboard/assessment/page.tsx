@@ -114,6 +114,8 @@ export default function AssessmentPage() {
   const [answers, setAnswers] = useState<Answers>({});
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<SanaBotScreeningOutput | null>(null);
+  // TODO: Get user profile from Auth context
+  const userProfile = { age: 30, gender: "Not specified"};
 
   const handleAnswerChange = (instrumentName: string, question: string, value: string) => {
     setAnswers((prev) => ({
@@ -147,8 +149,8 @@ export default function AssessmentPage() {
                     answer: answers[instrument.name]?.[q.q] || "Not answered",
                 }))
             })),
-            age: 30, // Mock data
-            gender: "Not specified", // Mock data
+            age: userProfile.age,
+            gender: userProfile.gender,
         };
         const res = await sanaBotScreening(assessmentInput);
         setResults(res);
