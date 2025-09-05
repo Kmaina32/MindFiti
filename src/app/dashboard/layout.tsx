@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 
 import Link from "next/link"
+import { usePathname } from 'next/navigation'
 import { Logo } from "@/components/logo"
 import {
   Sidebar,
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Input } from "@/components/ui/input"
 import { UserMenu } from "@/components/user-menu"
+import { cn } from "@/lib/utils"
 
 
 export default function DashboardLayout({
@@ -34,6 +36,9 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
+  const pathname = usePathname()
+
+  const isActive = (path: string) => pathname === path
 
   return (
     <SidebarProvider>
@@ -48,74 +53,95 @@ export default function DashboardLayout({
           <SidebarContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton href="/dashboard"
-                  tooltip={{
-                    children: "Dashboard",
-                  }}
-                >
-                  <Home />
-                  <span>Dashboard</span>
-                </SidebarMenuButton>
+                 <Link href="/dashboard" passHref>
+                    <SidebarMenuButton
+                    isActive={isActive("/dashboard")}
+                    tooltip={{
+                        children: "Dashboard",
+                    }}
+                    >
+                    <Home />
+                    <span>Dashboard</span>
+                    </SidebarMenuButton>
+                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton href="/dashboard/assessment"
-                  tooltip={{
-                    children: "Assessments",
-                  }}
-                >
-                  <ClipboardCheck />
-                  <span>Assessments</span>
-                </SidebarMenuButton>
+                <Link href="/dashboard/assessment" passHref>
+                    <SidebarMenuButton
+                    isActive={isActive("/dashboard/assessment")}
+                    tooltip={{
+                        children: "Assessments",
+                    }}
+                    >
+                    <ClipboardCheck />
+                    <span>Assessments</span>
+                    </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton href="/dashboard/journal"
-                  tooltip={{
-                    children: "Journal",
-                  }}
-                >
-                  <BookHeart />
-                  <span>Journal</span>
-                </SidebarMenuButton>
+                <Link href="/dashboard/journal" passHref>
+                    <SidebarMenuButton
+                    isActive={isActive("/dashboard/journal")}
+                    tooltip={{
+                        children: "Journal",
+                    }}
+                    >
+                    <BookHeart />
+                    <span>Journal</span>
+                    </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
                <SidebarMenuItem>
-                <SidebarMenuButton href="/dashboard/community"
-                  tooltip={{
-                    children: "Community",
-                  }}
-                >
-                  <Users2 />
-                  <span>Community</span>
-                </SidebarMenuButton>
+                <Link href="/dashboard/community" passHref>
+                    <SidebarMenuButton
+                    isActive={isActive("/dashboard/community")}
+                    tooltip={{
+                        children: "Community",
+                    }}
+                    >
+                    <Users2 />
+                    <span>Community</span>
+                    </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
                <SidebarMenuItem>
-                <SidebarMenuButton href="/dashboard/learn"
-                  tooltip={{
-                    children: "Learn",
-                  }}
-                >
-                  <BookOpen />
-                  <span>Learn</span>
-                </SidebarMenuButton>
+                <Link href="/dashboard/learn" passHref>
+                    <SidebarMenuButton
+                    isActive={isActive("/dashboard/learn")}
+                    tooltip={{
+                        children: "Learn",
+                    }}
+                    >
+                    <BookOpen />
+                    <span>Learn</span>
+                    </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton href="/dashboard/crisis-support"
-                  tooltip={{
-                    children: "Crisis Support",
-                  }}
-                >
-                  <ShieldAlert />
-                  <span>Crisis Support</span>
-                </SidebarMenuButton>
+                <Link href="/dashboard/crisis-support" passHref>
+                    <SidebarMenuButton
+                    isActive={isActive("/dashboard/crisis-support")}
+                    tooltip={{
+                        children: "Crisis Support",
+                    }}
+                    >
+                    <ShieldAlert />
+                    <span>Crisis Support</span>
+                    </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton href="/dashboard/settings"
-                  tooltip={{
-                    children: "Settings",
-                  }}
-                >
-                  <Settings />
-                  <span>Settings</span>
-                </SidebarMenuButton>
+                <Link href="/dashboard/settings" passHref>
+                    <SidebarMenuButton
+                    isActive={isActive("/dashboard/settings")}
+                    tooltip={{
+                        children: "Settings",
+                    }}
+                    >
+                    <Settings />
+                    <span>Settings</span>
+                    </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
