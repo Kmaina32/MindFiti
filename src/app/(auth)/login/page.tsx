@@ -7,7 +7,8 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -32,8 +33,24 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push("/dashboard");
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        if (userData.role === 'provider') {
+          router.push("/provider/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
+      } else {
+        // Default redirect if user document doesn't exist
+        router.push("/dashboard");
+      }
+
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -46,8 +63,25 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
-      router.push("/dashboard");
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        if (userData.role === 'provider') {
+          router.push("/provider/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
+      } else {
+        // This can happen if the user signs in with Google but hasn't completed the signup form with a role
+        // Redirect them to signup to complete their profile
+        router.push("/signup");
+      }
+
     } catch (error: any) {
       toast({
         variant: "destructive",
