@@ -38,20 +38,28 @@ export default function SignupPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      const userRole = email === 'gmaina4242@gmail.com' ? 'admin' : role;
+
       // Store user info in Firestore
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         firstName,
         lastName,
         email,
-        role,
+        role: userRole,
       });
 
       toast({
         title: "Account Created",
         description: "You have successfully created an account. Please log in.",
       });
-      router.push("/login");
+
+      if (userRole === 'admin') {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/login");
+      }
+
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -74,19 +82,23 @@ export default function SignupPage() {
       if (docSnap.exists()) {
         // User already exists, redirect to appropriate dashboard
         const userData = docSnap.data();
-        if (userData.role === 'provider') {
+        if (userData.role === 'admin') {
+           router.push("/admin/dashboard");
+        } else if (userData.role === 'provider') {
           router.push("/provider/dashboard");
         } else {
           router.push("/dashboard");
         }
       } else {
         // New user, store their info in Firestore
+        const userRole = user.email === 'gmaina4242@gmail.com' ? 'admin' : role;
+        
         await setDoc(doc(db, "users", user.uid), {
           uid: user.uid,
           firstName: user.displayName?.split(" ")[0] || "",
           lastName: user.displayName?.split(" ").slice(1).join(" ") || "",
           email: user.email,
-          role: role,
+          role: userRole,
         });
 
         toast({
@@ -94,7 +106,9 @@ export default function SignupPage() {
           description: "You have successfully created an account with Google.",
         });
 
-        if (role === 'provider') {
+        if (userRole === 'admin') {
+          router.push("/admin/dashboard");
+        } else if (role === 'provider') {
           router.push("/provider/dashboard");
         } else {
           router.push("/dashboard");
@@ -125,127 +139,129 @@ export default function SignupPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="first-name">First name</Label>
-                <Input
-                  id="first-name"
-                  placeholder="Amina"
-                  required
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="last-name">Last name</Label>
-                <Input
-                  id="last-name"
-                  placeholder="Kimani"
-                  required
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Sign up as</Label>
-              <RadioGroup
-                defaultValue="client"
-                className="grid grid-cols-2 gap-4"
-                value={role}
-                onValueChange={setRole}
-              >
-                <div>
-                  <RadioGroupItem value="client" id="client" className="peer sr-only" />
-                  <Label
-                    htmlFor="client"
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                  >
-                    Client
-                  </Label>
-                </div>
-                <div>
-                  <RadioGroupItem
-                    value="provider"
-                    id="provider"
-                    className="peer sr-only"
+          <form onSubmit={handleSignUp}>
+            <div className="grid gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="first-name">First name</Label>
+                  <Input
+                    id="first-name"
+                    placeholder="Amina"
+                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                   />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="last-name">Last name</Label>
+                  <Input
+                    id="last-name"
+                    placeholder="Kimani"
+                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Sign up as</Label>
+                <RadioGroup
+                  defaultValue="client"
+                  className="grid grid-cols-2 gap-4"
+                  value={role}
+                  onValueChange={setRole}
+                >
+                  <div>
+                    <RadioGroupItem value="client" id="client" className="peer sr-only" />
+                    <Label
+                      htmlFor="client"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      Client
+                    </Label>
+                  </div>
+                  <div>
+                    <RadioGroupItem
+                      value="provider"
+                      id="provider"
+                      className="peer sr-only"
+                    />
+                    <Label
+                      htmlFor="provider"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      Provider
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              <div className="flex items-center space-x-2 mt-2">
+                  <Checkbox id="terms" required />
                   <Label
-                    htmlFor="provider"
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    htmlFor="terms"
+                    className="text-sm font-normal text-muted-foreground"
                   >
-                    Provider
+                    By creating an account, you agree to our{" "}
+                    <Link href="/terms" className="underline">
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="/privacy" className="underline">
+                      Privacy Policy
+                    </Link>
+                    .
                   </Label>
                 </div>
-              </RadioGroup>
+              <Button type="submit" className="w-full mt-2">
+                Create Account
+              </Button>
             </div>
-             <div className="flex items-center space-x-2 mt-2">
-                <Checkbox id="terms" required />
-                <Label
-                  htmlFor="terms"
-                  className="text-sm font-normal text-muted-foreground"
-                >
-                  By creating an account, you agree to our{" "}
-                  <Link href="/terms" className="underline">
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link href="/privacy" className="underline">
-                    Privacy Policy
-                  </Link>
-                  .
-                </Label>
-              </div>
-            <Button type="button" className="w-full mt-2" onClick={handleSignUp}>
-              Create Account
-            </Button>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or sign up with
-                </span>
-              </div>
+          </form>
+          <div className="relative mt-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
             </div>
-            <Button variant="outline" type="button" onClick={handleGoogleSignUp}>
-                <svg
-                  className="mr-2 h-4 w-4"
-                  role="img"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 488 512"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M488 261.8C488 403.3 381.5 512 244 512 111.8 512 0 400.2 0 261.8 0 123.5 111.8 11.8 244 11.8c67.6 0 124 24.4 167.3 64.8L352.5 137.2C322.2 109.2 286.7 91.8 244 91.8c-83.8 0-152.3 67.2-152.3 150s68.5 150 152.3 150c90.8 0 138.8-63.8 142.5-98.2H244v-73.8h236c1.3 12.8 2 26.2 2 40.8z"
-                  ></path>
-                </svg>
-                Google
-            </Button>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or sign up with
+              </span>
+            </div>
           </div>
+          <Button variant="outline" type="button" className="w-full mt-4" onClick={handleGoogleSignUp}>
+              <svg
+                className="mr-2 h-4 w-4"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 488 512"
+              >
+                <path
+                  fill="currentColor"
+                  d="M488 261.8C488 403.3 381.5 512 244 512 111.8 512 0 400.2 0 261.8 0 123.5 111.8 11.8 244 11.8c67.6 0 124 24.4 167.3 64.8L352.5 137.2C322.2 109.2 286.7 91.8 244 91.8c-83.8 0-152.3 67.2-152.3 150s68.5 150 152.3 150c90.8 0 138.8-63.8 142.5-98.2H244v-73.8h236c1.3 12.8 2 26.2 2 40.8z"
+                ></path>
+              </svg>
+              Google
+          </Button>
         </CardContent>
         <CardFooter className="text-center text-sm">
           Already have an account?{" "}
@@ -257,5 +273,3 @@ export default function SignupPage() {
     </div>
   );
 }
-
-    

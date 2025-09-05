@@ -35,6 +35,11 @@ export default function LoginPage() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+
+      if (user.email === 'gmaina4242@gmail.com') {
+        router.push('/admin/dashboard');
+        return;
+      }
       
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
@@ -43,8 +48,6 @@ export default function LoginPage() {
         const userData = docSnap.data();
         if (userData.role === 'provider') {
           router.push("/provider/dashboard");
-        } else if (userData.role === 'admin') {
-          router.push('/admin/dashboard');
         } else {
           router.push("/dashboard");
         }
@@ -68,6 +71,11 @@ export default function LoginPage() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
+      if (user.email === 'gmaina4242@gmail.com') {
+        router.push('/admin/dashboard');
+        return;
+      }
+
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
@@ -75,8 +83,6 @@ export default function LoginPage() {
         const userData = docSnap.data();
         if (userData.role === 'provider') {
           router.push("/provider/dashboard");
-        } else if (userData.role === 'admin') {
-          router.push('/admin/dashboard');
         } else {
           router.push("/dashboard");
         }

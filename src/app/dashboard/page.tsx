@@ -46,6 +46,8 @@ export default function DashboardPage() {
 
           if (userData.role === 'provider') {
             router.replace('/provider/dashboard');
+          } else if (userData.role === 'admin') {
+            router.replace('/admin/dashboard');
           }
 
         } else {
@@ -57,7 +59,7 @@ export default function DashboardPage() {
   }, [user, router]);
 
 
-  if (loading || !user || userRole === 'provider') {
+  if (loading || !user || userRole === 'provider' || userRole === 'admin') {
     return null // Or a loading spinner
   }
 
