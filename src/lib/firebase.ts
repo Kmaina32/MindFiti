@@ -14,9 +14,7 @@ const firebaseConfig = {
   "storageBucket": "mindfiti.firebasestorage.app",
   "apiKey": "AIzaSyB3ZfB_VpQKCQXUdX4eEwVlWSGQpvpy2vc",
   "authDomain": "mindfiti.firebaseapp.com",
-  "measurementId": "",
-  "messagingSenderId": "964015669970",
-  "databaseURL": "https://mindfiti-default-rtdb.europe-west1.firebasedatabase.app",
+  "measurementId": ""
 };
 
 // Initialize Firebase
