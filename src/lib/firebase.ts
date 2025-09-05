@@ -2,6 +2,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -13,12 +14,14 @@ const firebaseConfig = {
   "apiKey": "AIzaSyB3ZfB_VpQKCQXUdX4eEwVlWSGQpvpy2vc",
   "authDomain": "mindfiti.firebaseapp.com",
   "measurementId": "",
-  "messagingSenderId": "964015669970"
+  "messagingSenderId": "964015669970",
+  "databaseURL": "https://mindfiti-default-rtdb.europe-west1.firebasedatabase.app/",
 };
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 const db = getFirestore(app);
+const rtdb = getDatabase(app);
 
-export { app, auth, db };
+export { app, auth, db, rtdb };
