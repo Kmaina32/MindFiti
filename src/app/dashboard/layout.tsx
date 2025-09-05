@@ -55,7 +55,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname()
   const router = useRouter();
-  const { user, userProfile, loading } = useAuth();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -64,7 +64,7 @@ export default function DashboardLayout({
   }, [user, loading, router]);
 
 
-  if (loading || !userProfile) {
+  if (loading || !user) {
     return <BrandedLoader />;
   }
 

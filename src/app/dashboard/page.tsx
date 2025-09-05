@@ -1,3 +1,4 @@
+
 "use client"
 
 import {
@@ -21,6 +22,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { useAuth } from "@/context/auth-context"
 
 const chartData: any[] = [
   // { date: "2023-01", mood: 3 },
@@ -40,7 +42,8 @@ const chartConfig = {
 
 
 export default function DashboardPage() {
-  const firstName = "there";
+  const { userProfile } = useAuth();
+  const firstName = userProfile?.firstName || "there";
 
   return (
     <div className="flex flex-col gap-8">
