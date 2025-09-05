@@ -13,11 +13,24 @@ import {
   BookOpen,
   Video,
   BrainCircuit,
+  LifeBuoy,
+  ChevronDown,
+  Globe,
+  Handshake,
+  Landmark,
+  Award,
+  CreditCard,
+  Phone,
 } from "lucide-react"
 
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
 import { Logo } from "@/components/logo"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import {
   Sidebar,
   SidebarContent,
@@ -145,6 +158,79 @@ export default function DashboardLayout({
                     </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
+
+               <Collapsible asChild>
+                 <>
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton
+                        tooltip={{
+                          children: "Support",
+                        }}
+                        className="group-data-[collapsible=icon]:justify-center"
+                      >
+                        <LifeBuoy />
+                        <span className="flex-1">Support</span>
+                        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 data-[state=open]:rotate-180" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                  </SidebarMenuItem>
+
+                  <CollapsibleContent asChild>
+                    <SidebarMenu className="pl-6">
+                       <SidebarMenuItem>
+                          <Link href="/dashboard/support/local-support" passHref>
+                              <SidebarMenuButton isActive={isActive("/dashboard/support/local-support")} variant="ghost" className="h-8">
+                                <Globe/>
+                                <span>Local Support</span>
+                              </SidebarMenuButton>
+                          </Link>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <Link href="/dashboard/support/follow-up-care" passHref>
+                              <SidebarMenuButton isActive={isActive("/dashboard/support/follow-up-care")} variant="ghost" className="h-8">
+                                <Handshake/>
+                                <span>Follow-up Care</span>
+                              </SidebarMenuButton>
+                          </Link>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <Link href="/dashboard/support/cultural-resources" passHref>
+                              <SidebarMenuButton isActive={isActive("/dashboard/support/cultural-resources")} variant="ghost" className="h-8">
+                                <Landmark/>
+                                <span>Cultural Resources</span>
+                              </SidebarMenuButton>
+                          </Link>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <Link href="/dashboard/support/rewards" passHref>
+                              <SidebarMenuButton isActive={isActive("/dashboard/support/rewards")} variant="ghost" className="h-8">
+                                <Award/>
+                                <span>Rewards</span>
+                              </SidebarMenuButton>
+                          </Link>
+                        </SidebarMenuItem>
+                         <SidebarMenuItem>
+                          <Link href="/dashboard/support/payments" passHref>
+                              <SidebarMenuButton isActive={isActive("/dashboard/support/payments")} variant="ghost" className="h-8">
+                                <CreditCard/>
+                                <span>Payments</span>
+                              </SidebarMenuButton>
+                          </Link>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <Link href="/dashboard/support/contact" passHref>
+                              <SidebarMenuButton isActive={isActive("/dashboard/support/contact")} variant="ghost" className="h-8">
+                                <Phone/>
+                                <span>Contact Us</span>
+                              </SidebarMenuButton>
+                          </Link>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                  </CollapsibleContent>
+                 </>
+              </Collapsible>
+
               <SidebarMenuItem>
                 <Link href="/dashboard/crisis-support" passHref>
                     <SidebarMenuButton
