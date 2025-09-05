@@ -35,8 +35,8 @@ export default function AdminDashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-4xl font-bold">1,254</p>
-            <p className="text-xs text-muted-foreground">+20.1% from last month</p>
+            <p className="text-4xl font-bold">0</p>
+            <p className="text-xs text-muted-foreground">No users yet</p>
           </CardContent>
         </Card>
         <Card>
@@ -47,8 +47,8 @@ export default function AdminDashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-4xl font-bold">893</p>
-             <p className="text-xs text-muted-foreground">54% of total users</p>
+            <p className="text-4xl font-bold">0</p>
+             <p className="text-xs text-muted-foreground">0% of total users</p>
           </CardContent>
         </Card>
         <Card>
@@ -59,8 +59,8 @@ export default function AdminDashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-4xl font-bold">86</p>
-             <p className="text-xs text-muted-foreground">+12 since last month</p>
+            <p className="text-4xl font-bold">0</p>
+             <p className="text-xs text-muted-foreground">No providers yet</p>
           </CardContent>
         </Card>
       </div>
@@ -76,7 +76,7 @@ export default function AdminDashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">2,450</p>
+            <p className="text-3xl font-bold">0</p>
           </CardContent>
         </Card>
         <Card>
@@ -90,7 +90,7 @@ export default function AdminDashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">5,123</p>
+            <p className="text-3xl font-bold">0</p>
           </CardContent>
         </Card>
       </div>

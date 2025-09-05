@@ -9,12 +9,6 @@ import {
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 const chartData: any[] = [
-  // { month: "January", users: 186, providers: 80 },
-  // { month: "February", users: 305, providers: 200 },
-  // { month: "March", users: 237, providers: 120 },
-  // { month: "April", users: 73, providers: 190 },
-  // { month: "May", users: 209, providers: 130 },
-  // { month: "June", users: 214, providers: 140 },
 ]
 
 const chartConfig = {

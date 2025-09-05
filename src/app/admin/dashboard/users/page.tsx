@@ -11,38 +11,6 @@ import Image from "next/image";
 import { useState } from "react";
 
 const users: any[] = [
-  // {
-  //   name: "Amina Kimani",
-  //   email: "amina@example.com",
-  //   role: "client",
-  //   status: "Active",
-  //   joined: "2023-06-23",
-  //   avatar: "https://i.pravatar.cc/150?u=amina@example.com"
-  // },
-  // {
-  //   name: "Dr. John O.",
-  //   email: "john.o@clinic.com",
-  //   role: "provider",
-  //   status: "Active",
-  //   joined: "2023-05-15",
-  //   avatar: "https://i.pravatar.cc/150?u=john.o@clinic.com"
-  // },
-  //   {
-  //   name: "Michael Smith",
-  //   email: "michael.s@test.co",
-  //   role: "client",
-  //   status: "Inactive",
-  //   joined: "2023-07-01",
-  //   avatar: "https://i.pravatar.cc/150?u=michael.s@test.co"
-  // },
-  // {
-  //   name: "Admin User",
-  //   email: "admin@mindfiti.co",
-  //   role: "admin",
-  //   status: "Active",
-  //   joined: "2023-01-01",
-  //   avatar: "https://i.pravatar.cc/150?u=admin@mindfiti.co"
-  // },
 ];
 
 export default function AdminUsersPage() {
