@@ -6,6 +6,8 @@ import { User, onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { BrandedLoader } from "@/components/branded-loader";
+import { useRouter, usePathname } from "next/navigation";
+
 
 interface UserProfile {
   role: 'client' | 'provider' | 'admin';
@@ -28,28 +30,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
+      setLoading(true);
       if (user) {
-        // Fetch user profile from Firestore
+        setUser(user);
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setUserProfile(docSnap.data() as UserProfile);
+          const profile = docSnap.data() as UserProfile;
+          setUserProfile(profile);
+          // If user is on a signup/login page but has a full profile, redirect them
+          if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
+            switch(profile.role) {
+                case 'admin': router.replace('/admin/dashboard'); break;
+                case 'provider': router.replace('/provider/dashboard'); break;
+                default: router.replace('/dashboard'); break;
+            }
+          }
         } else {
-          // Handle case where user exists in Auth but not in Firestore
           setUserProfile(null);
+          // User is authenticated but doesn't have a profile in Firestore.
+          // Redirect them to complete their profile.
+          if (!pathname.startsWith('/signup/profile')) {
+             router.replace('/signup/profile');
+          }
         }
       } else {
+        setUser(null);
         setUserProfile(null);
       }
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [router, pathname]);
 
   if (loading) {
     return <BrandedLoader />;

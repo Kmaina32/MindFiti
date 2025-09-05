@@ -53,23 +53,10 @@ export default function LoginPage() {
 
       if (docSnap.exists()) {
         const userData = docSnap.data();
-        if (userData.role) {
-          handleRedirect(userData.role);
-        } else {
-           // This case can happen if a user authenticated but didn't complete signup (e.g. role selection).
-          toast({
-            title: "Complete Your Profile",
-            description: "Please select an account type to continue.",
-          });
-          router.push("/signup");
-        }
+        handleRedirect(userData.role);
       } else {
-        // This case can happen with social sign-ins where the user is new.
-        toast({
-          title: "Complete Your Profile",
-          description: "Please select an account type to get started.",
-        });
-        router.push("/signup");
+         // This can happen with a new Google user that hasn't completed their profile
+        router.push("/signup/profile");
       }
     } catch (error) {
        toast({
@@ -170,7 +157,7 @@ export default function LoginPage() {
                   </span>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1">
                 <Button variant="outline" type="button" onClick={handleGoogleSignIn}>
                   <svg
                     className="mr-2 h-4 w-4"
@@ -184,20 +171,6 @@ export default function LoginPage() {
                     ></path>
                   </svg>
                   Google
-                </Button>
-                <Button variant="outline" type="button">
-                  <svg
-                    className="mr-2 h-4 w-4"
-                    role="img"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"
-                    ></path>
-                  </svg>
-                  Phone
                 </Button>
               </div>
             </div>

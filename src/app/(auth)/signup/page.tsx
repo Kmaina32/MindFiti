@@ -22,15 +22,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter
-} from "@/components/ui/alert-dialog";
-
 
 export default function SignupPage() {
   const router = useRouter();
@@ -40,8 +31,6 @@ export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [role, setRole] = useState("client");
-  const [showRoleDialog, setShowRoleDialog] = useState(false);
-  const [pendingUser, setPendingUser] = useState<User | null>(null);
 
   const handleRedirect = (role: string) => {
     switch (role) {
@@ -57,21 +46,20 @@ export default function SignupPage() {
     }
   };
 
-  const createFirestoreUser = async (user: User, userRole: string, fName?: string, lName?: string) => {
+  const createFirestoreUser = async (user: User, userRole: string, fName: string, lName: string) => {
     const userRef = doc(db, "users", user.uid);
     const emailRef = doc(db, "users-by-email", user.email!);
     const batch = writeBatch(db);
 
     batch.set(userRef, {
       uid: user.uid,
-      firstName: fName || user.displayName?.split(" ")[0] || "",
-      lastName: lName || user.displayName?.split(" ").slice(1).join(" ") || "",
+      firstName: fName,
+      lastName: lName,
       email: user.email,
       role: userRole,
     });
 
     batch.set(emailRef, { uid: user.uid });
-
     await batch.commit();
   }
 
@@ -121,33 +109,9 @@ export default function SignupPage() {
   const handleGoogleSignUp = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      if (!user.email) {
-        throw new Error("Google account does not have an email.");
-      }
-
-      const emailRef = doc(db, "users-by-email", user.email);
-      const emailDoc = await getDoc(emailRef);
-
-      if (emailDoc.exists()) {
-        // User already exists, fetch their profile and redirect
-        const userRef = doc(db, "users", emailDoc.data().uid);
-        const userDoc = await getDoc(userRef);
-        if(userDoc.exists()){
-            handleRedirect(userDoc.data().role);
-        } else {
-            // Data inconsistency, user email exists but profile doesn't.
-            // Let's treat as a new user and prompt for role.
-            setPendingUser(user);
-            setShowRoleDialog(true);
-        }
-      } else {
-        // New user, prompt for role
-        setPendingUser(user);
-        setShowRoleDialog(true);
-      }
+      await signInWithPopup(auth, provider);
+      // onAuthStateChanged in AuthProvider will handle the redirect
+      // to either dashboard or the profile completion page.
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -157,33 +121,7 @@ export default function SignupPage() {
     }
   };
 
-  const handleRoleSelection = async () => {
-    if (!pendingUser) return;
-    
-    try {
-      const userRole = pendingUser.email === 'gmaina4242@gmail.com' ? 'admin' : role;
-      await createFirestoreUser(pendingUser, userRole);
-      
-      toast({
-        title: "Account Created",
-        description: "Welcome to MindFiti!",
-      });
-
-      setShowRoleDialog(false);
-      handleRedirect(userRole);
-
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "An error occurred",
-        description: "Could not save your details. Please try again.",
-      });
-    }
-  };
-
-
   return (
-    <>
       <div className="flex min-h-screen items-center justify-center bg-secondary/50 p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
@@ -330,49 +268,5 @@ export default function SignupPage() {
           </CardFooter>
         </Card>
       </div>
-
-      <AlertDialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>One Last Step</AlertDialogTitle>
-            <AlertDialogDescription>
-              Please select your account type to complete your registration.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="grid gap-4 py-4">
-            <RadioGroup
-              defaultValue="client"
-              className="grid grid-cols-2 gap-4"
-              value={role}
-              onValueChange={setRole}
-            >
-              <div>
-                <RadioGroupItem value="client" id="g-client" className="peer sr-only" />
-                <Label
-                  htmlFor="g-client"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                >
-                  Client
-                </Label>
-              </div>
-              <div>
-                <RadioGroupItem value="provider" id="g-provider" className="peer sr-only" />
-                <Label
-                  htmlFor="g-provider"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                >
-                  Provider
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
-          <AlertDialogFooter>
-            <Button onClick={handleRoleSelection} className="w-full">
-              Complete Sign-Up
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
   );
 }
