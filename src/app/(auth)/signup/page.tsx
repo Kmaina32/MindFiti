@@ -3,9 +3,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, User } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
-import { doc, setDoc, getDoc, writeBatch } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
@@ -30,38 +29,6 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [role, setRole] = useState("client");
-
-  const handleRedirect = (role: string) => {
-    switch (role) {
-      case 'admin':
-        router.push('/admin/dashboard');
-        break;
-      case 'provider':
-        router.push('/provider/dashboard');
-        break;
-      default:
-        router.push('/dashboard');
-        break;
-    }
-  };
-
-  const createFirestoreUser = async (user: User, userRole: string, fName: string, lName: string) => {
-    const userRef = doc(db, "users", user.uid);
-    const emailRef = doc(db, "users-by-email", user.email!);
-    const batch = writeBatch(db);
-
-    batch.set(userRef, {
-      uid: user.uid,
-      firstName: fName,
-      lastName: lName,
-      email: user.email,
-      role: userRole,
-    });
-
-    batch.set(emailRef, { uid: user.uid });
-    await batch.commit();
-  }
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,9 +38,9 @@ export default function SignupPage() {
     }
     
     try {
+      // Check if email is already in use
       const emailRef = doc(db, "users-by-email", email);
       const emailDoc = await getDoc(emailRef);
-
       if (emailDoc.exists()) {
         toast({
           variant: "destructive",
@@ -84,18 +51,21 @@ export default function SignupPage() {
         return;
       }
 
+      // Create user but don't create profile yet
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      const userRole = email === 'gmaina4242@gmail.com' ? 'admin' : role;
 
-      await createFirestoreUser(user, userRole, firstName, lastName);
+      // We will create the user document in the profile completion step.
+      // For now, we can temporarily store the names if needed or pass them.
+      // A simple way is to use the auth context which will pick up the new user.
       
       toast({
         title: "Account Created",
-        description: "Welcome to MindFiti!",
+        description: "Please complete your profile.",
       });
 
-      handleRedirect(userRole);
+      // Redirect to complete profile
+      router.push("/signup/profile");
 
     } catch (error: any) {
        toast({
@@ -110,8 +80,7 @@ export default function SignupPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // onAuthStateChanged in AuthProvider will handle the redirect
-      // to either dashboard or the profile completion page.
+      // AuthProvider will handle redirecting to /signup/profile if it's a new user
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -180,38 +149,6 @@ export default function SignupPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                </div>
-                <div className="grid gap-2">
-                  <Label>Sign up as</Label>
-                  <RadioGroup
-                    defaultValue="client"
-                    className="grid grid-cols-2 gap-4"
-                    value={role}
-                    onValueChange={setRole}
-                  >
-                    <div>
-                      <RadioGroupItem value="client" id="client" className="peer sr-only" />
-                      <Label
-                        htmlFor="client"
-                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        Client
-                      </Label>
-                    </div>
-                    <div>
-                      <RadioGroupItem
-                        value="provider"
-                        id="provider"
-                        className="peer sr-only"
-                      />
-                      <Label
-                        htmlFor="provider"
-                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        Provider
-                      </Label>
-                    </div>
-                  </RadioGroup>
                 </div>
                 <div className="flex items-center space-x-2 mt-2">
                     <Checkbox id="terms" required />
