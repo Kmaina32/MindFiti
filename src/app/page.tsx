@@ -1,9 +1,12 @@
+"use client";
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, BrainCircuit, BookHeart, ShieldAlert, HeartHandshake, BotMessageSquare, BarChart3, Users, LucideIcon } from 'lucide-react';
 import { Logo } from '@/components/logo';
+import { useAuth } from '@/context/auth-context';
 
 const features = [
   {
@@ -78,6 +81,8 @@ function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
 }
 
 export default function LandingPage() {
+  const { user, loading } = useAuth();
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -87,12 +92,22 @@ export default function LandingPage() {
             <span className="text-xl font-bold">MindFiti</span>
           </Link>
           <nav className="flex items-center gap-4">
-            <Button variant="ghost" asChild>
-              <Link href="/login">Log In</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/signup">Sign Up</Link>
-            </Button>
+            {loading ? (
+              <div className="h-8 w-20 animate-pulse rounded-md bg-muted"></div>
+            ) : user ? (
+              <Button asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link href="/login">Log In</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/signup">Sign Up</Link>
+                </Button>
+              </>
+            )}
           </nav>
         </div>
       </header>
