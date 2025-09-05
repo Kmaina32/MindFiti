@@ -2,19 +2,86 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Landmark, Users, Mic, BookOpen } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+const resources = [
+    {
+        title: "Understanding Mental Health in an African Context",
+        type: "Article",
+        category: "Cultural Perspectives",
+        image: "https://picsum.photos/400/260",
+        dataAiHint: "African community"
+    },
+    {
+        title: "Podcast: The Role of Community in Wellness",
+        type: "Podcast",
+        category: "Community & Support",
+        image: "https://picsum.photos/400/261",
+        dataAiHint: "podcast microphone"
+    },
+    {
+        title: "Traditional Healing and Modern Psychology",
+        type: "Article",
+        category: "Integrative Approaches",
+        image: "https://picsum.photos/400/262",
+        dataAiHint: "traditional healing"
+    },
+    {
+        title: "Finding a Culturally Competent Therapist",
+        type: "Guide",
+        category: "Finding Support",
+        image: "https://picsum.photos/400/263",
+        dataAiHint: "therapist session"
+    }
+]
 
 export default function CulturalResourcesPage() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Cultural Resources</CardTitle>
-        <CardDescription>
-          Resources that are culturally relevant and sensitive.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">Culturally specific resources and content will be displayed here.</p>
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Card className="bg-primary/5 border-primary/20">
+        <CardHeader>
+            <div className="flex items-center gap-4">
+                <Landmark className="h-10 w-10 text-primary"/>
+                <div>
+                    <CardTitle className="text-2xl">Culturally-Sensitive Resources</CardTitle>
+                    <CardDescription>
+                        We believe in care that respects and understands your cultural background. These resources are curated to be relevant and sensitive to experiences within the African context.
+                    </CardDescription>
+                </div>
+            </div>
+        </CardHeader>
+      </Card>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {resources.map(resource => (
+            <Link href="#" key={resource.title}>
+                <Card className="overflow-hidden h-full group">
+                    <div className="relative">
+                        <Image 
+                            src={resource.image}
+                            alt={resource.title}
+                            width={400}
+                            height={250}
+                            className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+                            data-ai-hint={resource.dataAiHint}
+                        />
+                         <div className={`absolute top-2 right-2 flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold text-white ${resource.type === 'Podcast' ? 'bg-primary' : 'bg-accent'}`}>
+                            {resource.type === 'Podcast' ? <Mic className="h-3 w-3" /> : <BookOpen className="h-3 w-3" />}
+                            <span>{resource.type}</span>
+                        </div>
+                    </div>
+                    <CardHeader>
+                        <CardTitle className="text-lg leading-tight group-hover:text-primary">{resource.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">{resource.category}</p>
+                    </CardContent>
+                </Card>
+            </Link>
+        ))}
+      </div>
+    </div>
   );
 }
