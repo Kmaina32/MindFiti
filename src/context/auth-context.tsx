@@ -11,7 +11,7 @@ export interface UserProfile {
   uid: string;
   email: string | null;
   firstName: string;
-  lastName: string;
+  lastName:string;
   role: 'client' | 'provider' | 'admin';
 }
 
@@ -34,15 +34,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
       if (user) {
         setUser(user);
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setUserProfile(docSnap.data() as UserProfile);
-        } else {
-          // Handle case where user exists in Auth but not in Firestore
-          setUserProfile(null);
+        try {
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setUserProfile(docSnap.data() as UserProfile);
+          } else {
+            console.warn(`No user profile found in Firestore for UID: ${user.uid}. Creating a new record.`);
+            setUserProfile(null);
+          }
+        } catch (error: any) {
+            if (error.code === 'unavailable') {
+                console.error("Firebase Error: The client is offline or the Firestore database is not enabled. Please go to your Firebase project console, select 'Firestore Database', and ensure it is created and enabled.");
+            } else {
+                console.error("An error occurred while fetching user profile:", error);
+            }
+            setUserProfile(null);
         }
       } else {
         setUser(null);
