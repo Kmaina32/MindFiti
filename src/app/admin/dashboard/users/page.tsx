@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +14,39 @@ import { MoreHorizontal, File, PlusCircle, ListFilter } from "lucide-react";
 import Image from "next/image";
 import { useState, useMemo, ChangeEvent } from "react";
 
-const users: any[] = [
+const initialUsers: User[] = [
+   {
+    name: "Amina Kimani",
+    email: "amina@example.com",
+    role: "client",
+    status: "Active",
+    joined: "2024-07-28",
+    avatar: "https://i.pravatar.cc/150?u=amina@example.com"
+  },
+  {
+    name: "Michael Smith",
+    email: "michael.s@test.co",
+    role: "client",
+    status: "Active",
+    lastSession: "2024-07-25",
+    avatar: "https://i.pravatar.cc/150?u=michael.s@test.co"
+  },
+  {
+    name: "Jessica Williams",
+    email: "jess.w@email.com",
+    role: "client",
+    status: "Onboarding",
+    lastSession: "N/A",
+    avatar: "https://i.pravatar.cc/150?u=jess.w@email.com"
+  },
+  {
+    name: "Dr. Mbiti Mwondi",
+    email: "dr.mbiti@example.com",
+    role: "provider",
+    status: "Active",
+    lastSession: "N/A",
+    avatar: "https://i.pravatar.cc/150?u=dr.mbiti@example.com"
+  }
 ];
 
 type User = {
@@ -21,14 +54,16 @@ type User = {
   email: string;
   role: 'admin' | 'provider' | 'client';
   status: 'Active' | 'Inactive' | 'Onboarding';
-  joined: string;
+  joined?: string;
+  lastSession?: string;
   avatar: string;
 }
 
 export default function AdminUsersPage() {
-  const [userList, setUserList] = useState<User[]>(users);
+  const [userList, setUserList] = useState<User[]>(initialUsers);
   const [filter, setFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState<string[]>(['Active', 'Inactive', 'Onboarding']);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filteredUsers = useMemo(() => {
     return userList
@@ -39,15 +74,18 @@ export default function AdminUsersPage() {
   const handleAddUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
+    const formData = new FormData(form);
     const newUser: User = {
-        name: (form.elements.namedItem('name') as HTMLInputElement).value,
-        email: (form.elements.namedItem('email') as HTMLInputElement).value,
-        role: (form.elements.namedItem('role') as HTMLInputElement).value as User['role'],
-        status: (form.elements.namedItem('status') as HTMLInputElement).value as User['status'],
+        name: formData.get('name') as string,
+        email: formData.get('email') as string,
+        role: formData.get('role') as User['role'],
+        status: formData.get('status') as User['status'],
         joined: new Date().toLocaleDateString('en-CA'),
-        avatar: `https://i.pravatar.cc/150?u=${(form.elements.namedItem('email') as HTMLInputElement).value}`
+        avatar: `https://i.pravatar.cc/150?u=${formData.get('email') as string}`
     };
     setUserList(prev => [...prev, newUser]);
+    setIsDialogOpen(false);
+    form.reset();
   }
 
 
@@ -90,7 +128,7 @@ export default function AdminUsersPage() {
                     Export
                   </span>
                 </Button>
-                <Dialog>
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                         <Button size="sm" className="h-8 gap-1">
                             <PlusCircle className="h-3.5 w-3.5" />
@@ -178,12 +216,12 @@ export default function AdminUsersPage() {
                         </div>
                     </TableCell>
                     <TableCell>
-                        <Badge variant={user.role === 'admin' ? 'destructive' : 'secondary'} className="capitalize">{user.role}</Badge>
+                        <Badge variant={user.role === 'admin' ? 'destructive' : user.role === 'provider' ? 'secondary' : 'default'} className="capitalize">{user.role}</Badge>
                     </TableCell>
                     <TableCell>
                         <Badge variant={user.status === 'Active' ? 'default' : 'outline'}>{user.status}</Badge>
                     </TableCell>
-                    <TableCell>{user.joined}</TableCell>
+                    <TableCell>{user.joined || user.lastSession}</TableCell>
                     <TableCell>
                         <DropdownMenu>
                         <DropdownMenuTrigger asChild>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -10,10 +11,42 @@ import { Textarea } from "@/components/ui/textarea";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { useState } from "react";
 
-const initialContent: any[] = [];
+type Content = {
+  title: string;
+  category: string;
+  type: string;
+}
+
+const initialContent: Content[] = [
+    {
+        title: "What is Anxiety and How Does it Affect Us?",
+        type: "Article",
+        category: "Understanding Anxiety",
+    },
+     {
+        title: "Guided Meditation for Stress Relief",
+        type: "Video",
+        category: "Mindfulness Practices",
+    },
+];
 
 export default function AdminContentPage() {
   const [content, setContent] = useState(initialContent);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleAddContent = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const newContent: Content = {
+        title: formData.get('title') as string,
+        category: formData.get('category') as string,
+        type: formData.get('type') as string,
+    };
+    setContent(prev => [...prev, newContent]);
+    setIsDialogOpen(false);
+    form.reset();
+  }
 
   return (
     <Card>
@@ -25,7 +58,7 @@ export default function AdminContentPage() {
                 Manage educational resources and community guidelines.
                 </CardDescription>
             </div>
-             <Dialog>
+             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                     <Button size="sm" className="h-8 gap-1">
                         <PlusCircle className="h-3.5 w-3.5" />
@@ -41,27 +74,29 @@ export default function AdminContentPage() {
                             Fill in the details for the new educational resource.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="title" className="text-right">Title</Label>
-                            <Input id="title" className="col-span-3" />
+                    <form onSubmit={handleAddContent}>
+                        <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="title" className="text-right">Title</Label>
+                                <Input id="title" name="title" className="col-span-3" required />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="category" className="text-right">Category</Label>
+                                <Input id="category" name="category" className="col-span-3" required />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="type" className="text-right">Type</Label>
+                                <Input id="type" name="type" placeholder="e.g., Article, Video" className="col-span-3" required/>
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="description" className="text-right">Description</Label>
+                                <Textarea id="description" name="description" className="col-span-3" />
+                            </div>
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="category" className="text-right">Category</Label>
-                            <Input id="category" className="col-span-3" />
-                        </div>
-                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="type" className="text-right">Type</Label>
-                            <Input id="type" placeholder="e.g., Article, Video" className="col-span-3" />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="description" className="text-right">Description</Label>
-                            <Textarea id="description" className="col-span-3" />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <Button type="submit">Save Content</Button>
-                    </DialogFooter>
+                        <DialogFooter>
+                            <Button type="submit">Save Content</Button>
+                        </DialogFooter>
+                    </form>
                 </DialogContent>
             </Dialog>
         </div>
