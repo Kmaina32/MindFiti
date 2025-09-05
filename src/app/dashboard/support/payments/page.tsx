@@ -9,27 +9,6 @@ import { CreditCard, PlusCircle } from "lucide-react";
 import { useState } from "react";
 
 const transactions: any[] = [
-    // {
-    //     id: "txn_123",
-    //     date: "2024-07-15",
-    //     description: "Telehealth Session with Dr. John O.",
-    //     amount: "- KES 3,500",
-    //     status: "Completed"
-    // },
-    // {
-    //     id: "txn_124",
-    //     date: "2024-07-01",
-    //     description: "Monthly Subscription Fee",
-    //     amount: "- KES 1,000",
-    //     status: "Completed"
-    // },
-    // {
-    //     id: "txn_125",
-    //     date: "2024-06-15",
-    //     description: "Telehealth Session with Dr. John O.",
-    //     amount: "- KES 3,500",
-    //     status: "Completed"
-    // }
 ]
 
 export default function PaymentsPage() {
@@ -87,16 +66,6 @@ export default function PaymentsPage() {
                         <CardDescription>Your saved payment methods.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {/* <div className="flex items-center justify-between p-3 border rounded-lg">
-                            <div className="flex items-center gap-3">
-                                <CreditCard className="h-8 w-8 text-muted-foreground" />
-                                <div>
-                                    <p className="font-semibold">Visa ending in 4242</p>
-                                    <p className="text-sm text-muted-foreground">Expires 12/2026</p>
-                                </div>
-                            </div>
-                            <Button variant="ghost" size="sm">Remove</Button>
-                        </div> */}
                         <div className="text-center text-sm text-muted-foreground py-4">No saved payment methods.</div>
                          <Button variant="outline" className="w-full">
                             <PlusCircle className="mr-2 h-4 w-4"/> Add New Method

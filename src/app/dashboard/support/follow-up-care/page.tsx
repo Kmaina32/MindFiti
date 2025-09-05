@@ -3,10 +3,15 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, MessageSquare, Video, Calendar, Pill } from "lucide-react";
+import { CheckCircle, MessageSquare, Calendar, Pill } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+
+const goals: any[] = [];
 
 export default function FollowUpCarePage() {
+    const [wellnessGoals, setWellnessGoals] = useState(goals);
+
   return (
     <div className="space-y-8">
        <div>
@@ -23,12 +28,8 @@ export default function FollowUpCarePage() {
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p className="text-lg font-semibold">Follow-up with Dr. John O.</p>
-                    <p className="text-muted-foreground">Tuesday, August 26th at 11:00 AM</p>
-                    <div className="flex gap-2">
-                        <Button variant="outline" size="sm">Reschedule</Button>
-                        <Button size="sm">Join Video Call</Button>
-                    </div>
+                    <p className="text-muted-foreground">No upcoming appointments.</p>
+                     <Button size="sm" disabled>View Appointments</Button>
                 </CardContent>
             </Card>
             <Card>
@@ -51,7 +52,7 @@ export default function FollowUpCarePage() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-muted-foreground">You have 1 unread message.</p>
+                    <p className="text-muted-foreground">You have no unread messages.</p>
                     <Button variant="secondary" size="sm" className="mt-2">View Messages</Button>
                 </CardContent>
             </Card>
@@ -63,27 +64,19 @@ export default function FollowUpCarePage() {
                 <CardDescription>These are the goals you set with your provider. Track your progress and stay motivated.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                        <CheckCircle className="h-5 w-5 text-green-500" />
-                        <p>Practice mindfulness meditation for 10 minutes daily.</p>
+                {wellnessGoals.length > 0 ? wellnessGoals.map(goal => (
+                    <div key={goal.text} className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                            <CheckCircle className={`h-5 w-5 ${goal.completed ? 'text-green-500' : 'text-muted-foreground'}`} />
+                            <p>{goal.text}</p>
+                        </div>
+                        <Button variant="ghost" size="sm">View Progress</Button>
                     </div>
-                    <Button variant="ghost" size="sm">View Progress</Button>
-                </div>
-                 <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                        <CheckCircle className="h-5 w-5 text-muted-foreground" />
-                        <p>Go for a 30-minute walk at least 3 times a week.</p>
+                )) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                        <p>You haven't set any wellness goals with your provider yet.</p>
                     </div>
-                    <Button variant="ghost" size="sm">View Progress</Button>
-                </div>
-                 <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                        <CheckCircle className="h-5 w-5 text-muted-foreground" />
-                        <p>Complete one journal entry every two days.</p>
-                    </div>
-                    <Button variant="ghost" size="sm">View Progress</Button>
-                </div>
+                )}
             </CardContent>
         </Card>
          <Card>
@@ -92,14 +85,9 @@ export default function FollowUpCarePage() {
                 <CardDescription>Your provider has recommended these resources to support you.</CardDescription>
             </CardHeader>
             <CardContent className="grid md:grid-cols-2 gap-4">
-                <Link href="/dashboard/learn" className="p-4 border rounded-lg hover:bg-muted">
-                    <h4 className="font-semibold">Article: Understanding Cognitive Behavioral Therapy (CBT)</h4>
-                    <p className="text-sm text-muted-foreground">Learn about the principles of CBT and how it can help.</p>
-                </Link>
-                 <Link href="/dashboard/learn" className="p-4 border rounded-lg hover:bg-muted">
-                    <h4 className="font-semibold">Video: Guided Breathing for Anxiety</h4>
-                    <p className="text-sm text-muted-foreground">A 5-minute guided exercise to help manage moments of anxiety.</p>
-                </Link>
+                <div className="text-center py-8 text-muted-foreground">
+                    <p>No recommended resources from your provider at this time.</p>
+                </div>
             </CardContent>
         </Card>
     </div>

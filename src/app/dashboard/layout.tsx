@@ -65,7 +65,7 @@ export default function DashboardLayout({
               <span className="text-xl font-bold group-data-[collapsible=icon]:hidden">MindFiti</span>
             </Link>
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent className="flex-1">
             <SidebarMenu>
               <SidebarMenuItem>
                  <Link href="/dashboard" passHref>
@@ -230,34 +230,37 @@ export default function DashboardLayout({
                   </CollapsibleContent>
                  </div>
               </Collapsible>
-
-              <SidebarMenuItem>
-                <Link href="/dashboard/crisis-support" passHref>
-                    <SidebarMenuButton
-                    isActive={isActive("/dashboard/crisis-support")}
-                    tooltip={{
-                        children: "Crisis Support",
-                    }}
-                    >
-                    <ShieldAlert />
-                    <span>Crisis Support</span>
-                    </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <Link href="/dashboard/settings" passHref>
-                    <SidebarMenuButton
-                    isActive={isActive("/dashboard/settings")}
-                    tooltip={{
-                        children: "Settings",
-                    }}
-                    >
-                    <Settings />
-                    <span>Settings</span>
-                    </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
             </SidebarMenu>
+          </SidebarContent>
+          <SidebarContent className="mt-auto flex-none">
+             <SidebarMenu>
+                <SidebarMenuItem>
+                    <Link href="/dashboard/crisis-support" passHref>
+                        <SidebarMenuButton
+                        isActive={isActive("/dashboard/crisis-support")}
+                        tooltip={{
+                            children: "Crisis Support",
+                        }}
+                        >
+                        <ShieldAlert />
+                        <span>Crisis Support</span>
+                        </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <Link href="/dashboard/settings" passHref>
+                        <SidebarMenuButton
+                        isActive={isActive("/dashboard/settings")}
+                        tooltip={{
+                            children: "Settings",
+                        }}
+                        >
+                        <Settings />
+                        <span>Settings</span>
+                        </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+             </SidebarMenu>
           </SidebarContent>
         </div>
       </Sidebar>

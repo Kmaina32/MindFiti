@@ -9,24 +9,6 @@ import Image from "next/image";
 import { useState } from "react";
 
 const localResources: any[] = [
-    // {
-    //     name: "Nairobi Mental Health Support Center",
-    //     address: "123 Afya Road, Nairobi, Kenya",
-    //     phone: "+254 712 345 678",
-    //     services: ["Counseling", "Support Groups", "Workshops"]
-    // },
-    // {
-    //     name: "Coastal Wellness Clinic",
-    //     address: "456 Bahari Avenue, Mombasa, Kenya",
-    //     phone: "+254 723 456 789",
-    //     services: ["Psychiatry", "Addiction Support"]
-    // },
-    // {
-    //     name: "Rift Valley Counseling Partners",
-    //     address: "789 Upendo Lane, Nakuru, Kenya",
-    //     phone: "+254 734 567 890",
-    //     services: ["Family Therapy", "Youth Counseling"]
-    // }
 ]
 
 export default function LocalSupportPage() {

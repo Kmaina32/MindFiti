@@ -8,18 +8,6 @@ import { Award, Star, Gift } from "lucide-react";
 import { useState } from "react";
 
 const rewards: any[] = [
-    // {
-    //     title: "1-Month Free Premium",
-    //     cost: 5000,
-    // },
-    // {
-    //     title: "30-Minute Coaching Session",
-    //     cost: 3500,
-    // },
-    // {
-    //     title: "MindFiti Branded Journal",
-    //     cost: 2000,
-    // }
 ]
 
 export default function RewardsPage() {

@@ -8,34 +8,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 const resources: any[] = [
-    // {
-    //     title: "Understanding Mental Health in an African Context",
-    //     type: "Article",
-    //     category: "Cultural Perspectives",
-    //     image: "https://picsum.photos/400/260",
-    //     dataAiHint: "African community"
-    // },
-    // {
-    //     title: "Podcast: The Role of Community in Wellness",
-    //     type: "Podcast",
-    //     category: "Community & Support",
-    //     image: "https://picsum.photos/400/261",
-    //     dataAiHint: "podcast microphone"
-    // },
-    // {
-    //     title: "Traditional Healing and Modern Psychology",
-    //     type: "Article",
-    //     category: "Integrative Approaches",
-    //     image: "https://picsum.photos/400/262",
-    //     dataAiHint: "traditional healing"
-    // },
-    // {
-    //     title: "Finding a Culturally Competent Therapist",
-    //     type: "Guide",
-    //     category: "Finding Support",
-    //     image: "https://picsum.photos/400/263",
-    //     dataAiHint: "therapist session"
-    // }
 ]
 
 export default function CulturalResourcesPage() {
