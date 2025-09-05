@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { Skeleton } from "@/components/ui/skeleton";
+import { BrandedLoader } from "@/components/branded-loader";
 
 interface AuthContextType {
   user: User | null;
@@ -29,17 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
-      </div>
-    );
+    return <BrandedLoader />;
   }
 
   return (
