@@ -18,9 +18,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { BrandedLoader } from "@/components/branded-loader";
-import { sanaBotScreening, SanaBotScreeningOutput } from "@/ai/flows/sana-bot-screening";
+import { sanaBotScreening } from "@/ai/flows/sana-bot-screening";
+import { SanaBotScreeningOutput } from "@/ai/schemas/sana-bot-schemas";
 import { AlertCircle, CheckCircle, Lightbulb, RefreshCw, Shield, VenetianMask } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const instruments = [
   {
