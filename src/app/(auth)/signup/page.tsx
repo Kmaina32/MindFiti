@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, User } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, writeBatch } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -58,25 +58,39 @@ export default function SignupPage() {
   };
 
   const createFirestoreUser = async (user: User, userRole: string, fName?: string, lName?: string) => {
-     await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        firstName: fName || user.displayName?.split(" ")[0] || "",
-        lastName: lName || user.displayName?.split(" ").slice(1).join(" ") || "",
-        email: user.email,
-        role: userRole,
-      });
+    const userRef = doc(db, "users", user.uid);
+    const emailRef = doc(db, "users-by-email", user.email!);
+    const batch = writeBatch(db);
+
+    batch.set(userRef, {
+      uid: user.uid,
+      firstName: fName || user.displayName?.split(" ")[0] || "",
+      lastName: lName || user.displayName?.split(" ").slice(1).join(" ") || "",
+      email: user.email,
+      role: userRole,
+    });
+
+    batch.set(emailRef, { uid: user.uid });
+
+    await batch.commit();
   }
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email) {
+      toast({ variant: "destructive", title: "Signup Failed", description: "Email is required." });
+      return;
+    }
+    
     try {
-      // Check if user with this email already exists
-      const userDoc = await getDoc(doc(db, "users-by-email", email));
-      if (userDoc.exists()) {
+      const emailRef = doc(db, "users-by-email", email);
+      const emailDoc = await getDoc(emailRef);
+
+      if (emailDoc.exists()) {
         toast({
           variant: "destructive",
-          title: "Signup Failed",
-          description: "This email is already in use. Please log in.",
+          title: "Email already in use",
+          description: "This email is already registered. Please log in.",
         });
         router.push('/login');
         return;
@@ -87,8 +101,6 @@ export default function SignupPage() {
       const userRole = email === 'gmaina4242@gmail.com' ? 'admin' : role;
 
       await createFirestoreUser(user, userRole, firstName, lastName);
-      // Also create a lookup document to prevent duplicate emails
-      await setDoc(doc(db, "users-by-email", user.email!), { uid: user.uid });
       
       toast({
         title: "Account Created",
@@ -112,12 +124,25 @@ export default function SignupPage() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
+      if (!user.email) {
+        throw new Error("Google account does not have an email.");
+      }
 
-      if (docSnap.exists()) {
-        // User already exists, treat as login
-        handleRedirect(docSnap.data().role);
+      const emailRef = doc(db, "users-by-email", user.email);
+      const emailDoc = await getDoc(emailRef);
+
+      if (emailDoc.exists()) {
+        // User already exists, fetch their profile and redirect
+        const userRef = doc(db, "users", emailDoc.data().uid);
+        const userDoc = await getDoc(userRef);
+        if(userDoc.exists()){
+            handleRedirect(userDoc.data().role);
+        } else {
+            // Data inconsistency, user email exists but profile doesn't.
+            // Let's treat as a new user and prompt for role.
+            setPendingUser(user);
+            setShowRoleDialog(true);
+        }
       } else {
         // New user, prompt for role
         setPendingUser(user);
@@ -135,12 +160,9 @@ export default function SignupPage() {
   const handleRoleSelection = async () => {
     if (!pendingUser) return;
     
-    const userRole = pendingUser.email === 'gmaina4242@gmail.com' ? 'admin' : role;
-
     try {
+      const userRole = pendingUser.email === 'gmaina4242@gmail.com' ? 'admin' : role;
       await createFirestoreUser(pendingUser, userRole);
-      await setDoc(doc(db, "users-by-email", pendingUser.email!), { uid: pendingUser.uid });
-
       
       toast({
         title: "Account Created",
@@ -154,7 +176,7 @@ export default function SignupPage() {
       toast({
         variant: "destructive",
         title: "An error occurred",
-        description: "An unexpected error occurred. Please try again.",
+        description: "Could not save your details. Please try again.",
       });
     }
   };
@@ -354,5 +376,3 @@ export default function SignupPage() {
     </>
   );
 }
-
-    

@@ -47,20 +47,36 @@ export default function LoginPage() {
   };
 
   const handleLoginSuccess = async (user: User) => {
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
+    try {
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const userData = docSnap.data();
-      handleRedirect(userData.role);
-    } else {
-      // This case might happen if a user authenticated but didn't complete signup.
-      // Send them to signup to choose a role.
-      toast({
-        title: "Complete Your Profile",
-        description: "Please select an account type to continue.",
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        if (userData.role) {
+          handleRedirect(userData.role);
+        } else {
+           // This case can happen if a user authenticated but didn't complete signup (e.g. role selection).
+          toast({
+            title: "Complete Your Profile",
+            description: "Please select an account type to continue.",
+          });
+          router.push("/signup");
+        }
+      } else {
+        // This case can happen with social sign-ins where the user is new.
+        toast({
+          title: "Complete Your Profile",
+          description: "Please select an account type to get started.",
+        });
+        router.push("/signup");
+      }
+    } catch (error) {
+       toast({
+        variant: "destructive",
+        title: "Login Error",
+        description: "Could not retrieve user data. Please try again.",
       });
-      router.push("/signup");
     }
   };
 
