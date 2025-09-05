@@ -10,7 +10,10 @@ import {
 } from "@/components/ui/card"
 import {
   Users,
+  Activity,
   BarChart3,
+  ClipboardCheck,
+  BookHeart,
 } from "lucide-react"
 
 export default function AdminDashboardPage() {
@@ -23,38 +26,71 @@ export default function AdminDashboardPage() {
         <p className="text-muted-foreground">Platform administration overview.</p>
       </div>
 
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardHeader>
+             <div className="flex items-center justify-between">
+                <CardTitle>Total Users</CardTitle>
+                <Users className="h-6 w-6 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold">1,254</p>
+            <p className="text-xs text-muted-foreground">+20.1% from last month</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+             <div className="flex items-center justify-between">
+                <CardTitle>Active Users</CardTitle>
+                <Activity className="h-6 w-6 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold">893</p>
+             <p className="text-xs text-muted-foreground">54% of total users</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+             <div className="flex items-center justify-between">
+                <CardTitle>Total Providers</CardTitle>
+                <Users className="h-6 w-6 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold">86</p>
+             <p className="text-xs text-muted-foreground">+12 since last month</p>
+          </CardContent>
+        </Card>
+      </div>
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <div className="flex items-center gap-4">
-              <Users className="h-8 w-8 text-primary" />
-              <CardTitle>User Management</CardTitle>
+              <ClipboardCheck className="h-8 w-8 text-primary" />
+              <CardTitle>Assessments Taken</CardTitle>
             </div>
             <CardDescription>
-              View, edit, and manage all users on the platform.
+              Total number of wellness assessments completed by users.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* Placeholder for user stats */}
-            <p>Total Users: 0</p>
-            <p>Clients: 0</p>
-            <p>Providers: 0</p>
+            <p className="text-3xl font-bold">2,450</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
             <div className="flex items-center gap-4">
-              <BarChart3 className="h-8 w-8 text-primary" />
-              <CardTitle>Platform Analytics</CardTitle>
+              <BookHeart className="h-8 w-8 text-primary" />
+              <CardTitle>Journal Entries</CardTitle>
             </div>
             <CardDescription>
-              Key metrics and insights into platform usage.
+              Total number of journal entries created by users.
             </CardDescription>
           </CardHeader>
           <CardContent>
-             {/* Placeholder for analytics */}
-             <p>Assessments Taken: 0</p>
-             <p>Journal Entries: 0</p>
+            <p className="text-3xl font-bold">5,123</p>
           </CardContent>
         </Card>
       </div>

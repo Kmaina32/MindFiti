@@ -8,6 +8,7 @@ import {
   Users,
   BarChart3,
   Search,
+  FileText,
 } from "lucide-react"
 
 import Link from "next/link"
@@ -72,6 +73,16 @@ export default function AdminDashboardLayout({
                 >
                   <BarChart3 />
                   <span>Analytics</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton href="/admin/dashboard/content"
+                  tooltip={{
+                    children: "Content",
+                  }}
+                >
+                  <FileText />
+                  <span>Content Management</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

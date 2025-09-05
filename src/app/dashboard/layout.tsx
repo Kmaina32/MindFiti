@@ -8,7 +8,9 @@ import {
   ClipboardCheck,
   Settings,
   ShieldAlert,
-  Search
+  Search,
+  Users2,
+  BookOpen,
 } from "lucide-react"
 
 import Link from "next/link"
@@ -73,6 +75,26 @@ export default function DashboardLayout({
                 >
                   <BookHeart />
                   <span>Journal</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton href="/dashboard/community"
+                  tooltip={{
+                    children: "Community",
+                  }}
+                >
+                  <Users2 />
+                  <span>Community</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton href="/dashboard/learn"
+                  tooltip={{
+                    children: "Learn",
+                  }}
+                >
+                  <BookOpen />
+                  <span>Learn</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

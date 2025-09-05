@@ -1,19 +1,71 @@
-"use client";
+"use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
+
+const chartData = [
+  { month: "January", users: 186, providers: 80 },
+  { month: "February", users: 305, providers: 200 },
+  { month: "March", users: 237, providers: 120 },
+  { month: "April", users: 73, providers: 190 },
+  { month: "May", users: 209, providers: 130 },
+  { month: "June", users: 214, providers: 140 },
+]
+
+const chartConfig = {
+  users: {
+    label: "Users",
+    color: "hsl(var(--primary))",
+  },
+  providers: {
+    label: "Providers",
+    color: "hsl(var(--accent))",
+  },
+}
 
 export default function AdminAnalyticsPage() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Platform Analytics</CardTitle>
-        <CardDescription>
-          Key metrics and insights into platform usage.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">Analytics dashboards and reports will be displayed here.</p>
-      </CardContent>
-    </Card>
-  );
+    <div className="grid gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>User Growth</CardTitle>
+          <CardDescription>Monthly new user and provider sign-ups.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig} className="h-72 w-full">
+            <BarChart data={chartData} accessibilityLayer>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+              />
+              <YAxis />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="dot" />}
+              />
+              <Bar dataKey="users" fill="var(--color-users)" radius={4} />
+              <Bar dataKey="providers" fill="var(--color-providers)" radius={4} />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Feature Engagement</CardTitle>
+          <CardDescription>Usage metrics for key platform features.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <p className="text-muted-foreground">More detailed engagement analytics coming soon.</p>
+        </CardContent>
+      </Card>
+    </div>
+  )
 }

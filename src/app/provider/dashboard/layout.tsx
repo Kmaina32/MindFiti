@@ -8,6 +8,8 @@ import {
   Settings,
   Users,
   Search,
+  BarChart3,
+  CreditCard,
 } from "lucide-react"
 import Link from "next/link"
 import { Logo } from "@/components/logo"
@@ -71,6 +73,26 @@ export default function ProviderDashboardLayout({
                 >
                   <Calendar />
                   <span>Appointments</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton href="/provider/dashboard/analytics"
+                  tooltip={{
+                    children: "Analytics",
+                  }}
+                >
+                  <BarChart3 />
+                  <span>Analytics</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton href="/provider/dashboard/billing"
+                  tooltip={{
+                    children: "Billing",
+                  }}
+                >
+                  <CreditCard />
+                  <span>Billing</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

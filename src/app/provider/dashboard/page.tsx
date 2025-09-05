@@ -13,6 +13,8 @@ import {
   ArrowRight,
   Users,
   Calendar,
+  Activity,
+  DollarSign,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -24,6 +26,57 @@ export default function ProviderDashboardPage() {
       <div>
         <h1 className="text-3xl font-bold">Welcome, {firstName}!</h1>
         <p className="text-muted-foreground">Here's an overview of your practice.</p>
+      </div>
+
+       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader>
+             <div className="flex items-center justify-between">
+                <CardTitle>Total Clients</CardTitle>
+                <Users className="h-6 w-6 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold">12</p>
+            <p className="text-xs text-muted-foreground">+2 from last month</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+             <div className="flex items-center justify-between">
+                <CardTitle>Active Clients</CardTitle>
+                <Activity className="h-6 w-6 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold">9</p>
+             <p className="text-xs text-muted-foreground">75% of total clients</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+             <div className="flex items-center justify-between">
+                <CardTitle>Upcoming Sessions</CardTitle>
+                <Calendar className="h-6 w-6 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold">4</p>
+             <p className="text-xs text-muted-foreground">In the next 7 days</p>
+          </CardContent>
+        </Card>
+         <Card>
+          <CardHeader>
+             <div className="flex items-center justify-between">
+                <CardTitle>Monthly Revenue</CardTitle>
+                <DollarSign className="h-6 w-6 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold">$4,520</p>
+             <p className="text-xs text-muted-foreground">+15% from last month</p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
